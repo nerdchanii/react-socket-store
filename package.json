@@ -1,0 +1,44 @@
+{
+  "name": "react-socket-store",
+  "version": "0.0.1",
+  "description": "It is for easily using Websocket in React.It inspired by React-redux.",
+  "keywords": [],
+  "author": "nerdchanii <nerdchanii@gmail.com>",
+  "license": "MIT",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/esm/index.d.ts",
+  "files": [
+    "lib/*"
+  ],
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "build": "yarn build:esm && yarn build:cjs",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --outDir lib/cjs"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^4.8.2"
+  },
+  "dependencies": {
+    "socket-store": "^0.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nerdchanii/react-socket-store.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nerdchanii/react-socket-store/issues"
+  },
+  "homepage": "https://github.com/nerdchanii/react-socket-store"
+}

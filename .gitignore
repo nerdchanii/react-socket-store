@@ -1,0 +1,57 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+
+# example
+/example/node_modules
+/example/dist
+
+# Logs
+/example/logs
+/example/*.log
+/example/npm-debug.log*
+/example/yarn-debug.log*
+/example/yarn-error.log*
+/example/pnpm-debug.log*
+/example/lerna-debug.log*
+
+/example/node_modules
+/example/dist
+/example/dist-ssr
+/example/*.local
+
+/example/# Editor directories and files
+/example/.vscode/*
+/example/!.vscode/extensions.json
+/example/.idea
+/example/.DS_Store
+/example/*.suo
+/example/*.ntvs*
+/example/*.njsproj
+/example/*.sln
+/example/*.sw?
+
+/lib
