@@ -1,6 +1,9 @@
-# React-socket
+# react-socket-store
 
-It is for easily using Websocket in React.It inspired by React-redux.
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fnerdchanii%2Freact-socket-store&count_bg=%2357644D&title_bg=%23389008&icon=&icon_color=%23A86F6F&title=hits&edge_flat=true)](https://github.com/nerdchanii)
+<br/>
+It is for easily using Websocket in React.It inspired by [React-redux](https://github.com/reduxjs/react-redux).
+It is provider of [socket-store](https://github.com/nerdchanii/socket-store)
 
 ## Quick Start
 
@@ -25,8 +28,10 @@ yarn install react-socket-store
 
 ### 2. create MessageHandler(s), and Socket Store
 
-- [createMessageHandler](####2-1-createMessageHandler')
-- [createSocketStore](<####2-2-createSocketStore(socket:-Websocket,-messageHandlers)>)
+MesssageHandler and Socket store is based on [socket-store](https://github.com/nerdchanii/socket-store)
+
+- [createMessageHandler](#2-1-createmessagehandler)
+- [createSocketStore](#2-2-create-socketstore)
 
 <br/>
 
@@ -55,15 +60,17 @@ const talkHandler = createMessageHandler<string[], string>(
 <br>
 <br>
 
-#### 2-2 create SocketStore(socket: Websocket, messageHandlers)
-
+#### 2-2 create SocketStore
 <br>
 
 Next, create a socket store.<br>
 Store gets two parameters for web sockets and message handlers.
 
 ```ts
-//handlers = you can uses like this.
+import { createMessageHandler } from 'react-socket-store';
+
+// it is socket-store's apis
+// handlers = you can uses like this.
 const talkHandler = createMessageHandler(key, callback, []);
 const tradingHandler = createMessageHandler(key, callback, null);
 
@@ -96,15 +103,15 @@ const Index = (prop: Props) => {
 <br>
 <br>
 
-#### 3. Use SocketStore
+#### 3. Use SocketStore with Hook
 
 <br>
 
 we supply API for using SocketStore, by hooks.
 
-- [useSocket](#####useSocket)
-- [useSend](#####useSend)
-- [useListen](#####useListen)
+- [useSocket](#usesocket)
+- [useSend](#usesend)
+- [useListen](#uselisten)
   <br>
   <br>
 
@@ -198,3 +205,8 @@ const Component = (props: ComponentsProps) => {
 ```
 
 ## Contributors 👏🏻
+<br/>
+
+## LICENSE
+<br/>
+ MIT
