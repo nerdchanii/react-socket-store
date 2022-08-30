@@ -8,7 +8,7 @@ import store from "./sockets/index";
 function App() {
   return (
     <SocketProvider store={store}>
-      <div className="App border min-h-screen dark:bg-stone-900">
+      <div className="App border min-h-screen dark:bg-zinc-900">
         <Header />
         <Demo />
       </div>
