@@ -1,17 +1,15 @@
 # react-socket-store
 
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fnerdchanii%2Freact-socket-store&count_bg=%2357644D&title_bg=%23389008&icon=&icon_color=%23A86F6F&title=hits&edge_flat=true)](https://github.com/nerdchanii)
-<br/>
-It is for easily using Websocket in React.It inspired by [React-redux](https://github.com/reduxjs/react-redux).
-It is provider of [socket-store](https://github.com/nerdchanii/socket-store)
+
+It is for easily using Websocket in React. It inspired by [React-redux](https://github.com/reduxjs/react-redux).<br>
+It is provider of [socket-store](https://github.com/nerdchanii/socket-store).
 
 ## Quick Start
 
----
 
-### 1. install
+### 1. Install
 
-<br>
 
 ```bash
 #npm
@@ -20,32 +18,29 @@ npm install react-socket-store
 
 #yarn
 
-yarn install react-socket-store
+yarn add react-socket-store
 ```
 
-<br/>
-<br/>
 
-### 2. create MessageHandler(s), and Socket Store
 
-MesssageHandler and Socket store is based on [socket-store](https://github.com/nerdchanii/socket-store)
+### 2. Create MessageHandler(s), and Socket Store
 
-- [createMessageHandler](#2-1-createmessagehandler)
+
+MesssageHandler and Socket store is based on [socket-store](https://github.com/nerdchanii/socket-store).
+
+- [createMessageHandler](#2-1-create-messagehandler)
 - [createSocketStore](#2-2-create-socketstore)
 
-<br/>
+#### 2-1. Create MessageHandler
 
-#### 2-1 createMessageHandler
 
-<br>
+First, create a message handler.<br>
+Define the topic, callback for the topic, and default status. This will be provided in the store.
 
-First, create a message handler. <br> Define the topic, callback for the topic, and default status. This will be provided in the store.<br>
-
-- createMessageHandler(key, callback, state)<br>
-  - key : it will be subject of message.
-  - callback: it will works like reducer. it **_must return state!_**
-  - state: it is defualt state.
-    <br>
+- createMessageHandler(key, callback, state)
+  - `key` : it will be subject of message.
+  - `callback`: it will works like reducer. it **_must return state!_**
+  - `state`: it is defualt state.
 
 ```ts
 const talkHandler = createMessageHandler<string[], string>(
@@ -57,11 +52,10 @@ const talkHandler = createMessageHandler<string[], string>(
 );
 ```
 
-<br>
-<br>
 
-#### 2-2 create SocketStore
-<br>
+
+#### 2-2. Create SocketStore
+
 
 Next, create a socket store.<br>
 Store gets two parameters for web sockets and message handlers.
@@ -78,15 +72,12 @@ const socket = new WebSocket("ws://localhost:3030");
 const store = new SocketStore(socket, [talkHandler, tradingHandler]);
 ```
 
-<br>
-<br>
 
-#### 2-3 Provider
 
-<br>
+#### 2-3. Provider
 
-- Wrap your `<App>` with `<SocketProvider>`, And provide a previously created store as a prop for the socket provider.
-  <br>
+
+- Wrap your `<App>` with `<SocketProvider>`, and provide a previously created store as a prop for the socket provider.
 
 ```tsx
 import { SocketProvider } from "react-socket-store";
@@ -100,26 +91,23 @@ const Index = (prop: Props) => {
   );
 };
 ```
-<br>
-<br>
 
-#### 3. Use SocketStore with Hook
 
-<br>
+
+### 3. Use SocketStore with Hook
+
 
 we supply API for using SocketStore, by hooks.
 
-- [useSocket](#usesocket)
-- [useSend](#usesend)
-- [useListen](#uselisten)
-  <br>
-  <br>
+- [useSocket](#3-1-usesocket)
+- [useSend](#3-2-usesend)
+- [useListen](#3-3-uselisten)
 
-##### useSocket
 
-<br>
 
-- useSocket gets the parameter for the key of the MessageHandler, and returns the state, and sendfunction for the key.
+#### 3-1. useSocket
+
+`useSocket` gets the parameter for the key of the MessageHandler, and returns the state, and sendfunction for the key.
 
 ```tsx
 const Component = (props: ComponentsProps)=>{
@@ -149,13 +137,10 @@ const Component = (props: ComponentsProps)=>{
 }
 ```
 
-<br>
 
-##### useSend
+#### 3-2. useSend
 
-<br>
-
-- useSend gets the paramerter for the key of the MessageHandler, and returns
+`useSend` gets the paramerter for the key of the MessageHandler, and returns
   only sendfunction for the key.
 
 ```tsx
@@ -182,14 +167,10 @@ const Component = (props: ComponentsProps) => {
 };
 ```
 
-<br>
-<br>
 
-##### useListen
+#### 3-3. useListen
 
-<br>
-
-- useSend gets the paramerter for the key of the MessageHandler, and returns
+`useSend` gets the paramerter for the key of the MessageHandler, and returns
   only state for the key.
 
 ```tsx
@@ -198,11 +179,13 @@ const Component = (props: ComponentsProps) => {
 
   return(
     <div>
-      {state.map(message)=> <span>{message}</span>}
+      {state.map((message)=> <span>{message}</span>)}
     </div>
   )
 };
 ```
+
+
 
 ## Contributors 👏🏻
 <br/>
