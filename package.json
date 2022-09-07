@@ -1,6 +1,6 @@
 {
   "name": "react-socket-store",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "It is for easily using Websocket in React.It inspired by React-redux.",
   "keywords": [
     "react",

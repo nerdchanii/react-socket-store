@@ -1,4 +1,5 @@
 # react-socket-store
+[![npm version](https://badge.fury.io/js/react-socket-store.svg)](https://badge.fury.io/js/react-socket-store)
 
 It is for easily using Websocket in React. It inspired by [React-redux](https://github.com/reduxjs/react-redux).<br>
 It is provider of [socket-store](https://github.com/nerdchanii/socket-store).
