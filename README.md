@@ -1,7 +1,5 @@
 # react-socket-store
 
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fnerdchanii%2Freact-socket-store&count_bg=%2357644D&title_bg=%23389008&icon=&icon_color=%23A86F6F&title=hits&edge_flat=true)](https://github.com/nerdchanii)
-
 It is for easily using Websocket in React. It inspired by [React-redux](https://github.com/reduxjs/react-redux).<br>
 It is provider of [socket-store](https://github.com/nerdchanii/socket-store).
 
@@ -58,20 +56,24 @@ const talkHandler = createMessageHandler<string[], string>(
 
 
 Next, create a socket store.<br>
-Store gets two parameters for web sockets and message handlers.
+Store gets two or three parameters for web sockets and message handlers.
+1. `WebSocket instance`,
+2. `array of message handler`,
+3. `options` options has callbacks about connection status.
+
+- createSocketStore(ws: WebSocket, messageHandlers: MessageHandler[], options?: SocketStoreOptions)
 
 ```ts
-import { createMessageHandler } from 'react-socket-store';
-
-// it is socket-store's apis
-// handlers = you can uses like this.
-const talkHandler = createMessageHandler(key, callback, []);
-const tradingHandler = createMessageHandler(key, callback, null);
-
-const socket = new WebSocket("ws://localhost:3030");
-const store = new SocketStore(socket, [talkHandler, tradingHandler]);
+const socketStore = createSocketStore(
+  new WebSocket("ws://localhost:3000"),
+  [talkHandler],
+  {
+    onOpen: () => console.log("open"),
+    onClose: () => console.log("close"),
+    onError: () => console.log("error"),
+  }
+);
 ```
-
 
 
 #### 2-3. Provider
