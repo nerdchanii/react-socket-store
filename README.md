@@ -149,7 +149,7 @@ const Component = (props: ComponentsProps)=>{
 ```tsx
 const Component = (props: ComponentsProps) => {
   const [value, setValue] = useState("");
-  const [send] = useSocket("talk");
+  const [send] = useSend("talk");
 
   const onChange = (e) => {
     setValue(e.target.value);
@@ -173,12 +173,12 @@ const Component = (props: ComponentsProps) => {
 
 #### 3-3. useListen
 
-`useSend` gets the paramerter for the key of the MessageHandler, and returns
+`useListen` gets the paramerter for the key of the MessageHandler, and returns
   only state for the key.
 
 ```tsx
 const Component = (props: ComponentsProps) => {
-  const [state] = useSend("talk");
+  const [state] = useListen("talk");
 
   return(
     <div>
