@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { ISocketStore } from "socket-store/dist/esm/types";
+import type { ISocketStore } from "socket-store";
 
 const ReactSocketContext = createContext<ISocketStore>({} as ISocketStore);
 

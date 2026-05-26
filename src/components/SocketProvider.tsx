@@ -1,4 +1,5 @@
 import React from "react";
+import type { ISocketStore } from "socket-store";
 import ReactSocketContext from "./context";
 
 export function SocketProvider({
@@ -6,7 +7,7 @@ export function SocketProvider({
   store,
 }: {
   children: React.ReactNode;
-  store: any;
+  store: ISocketStore;
 }) {
   return (
     <ReactSocketContext.Provider value={store}>
