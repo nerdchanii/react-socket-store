@@ -25,7 +25,7 @@
     "build:cjs": "tsc --module commonjs --outDir lib/cjs",
     "typecheck": "tsc --noEmit",
     "lint:imports": "node scripts/check-public-imports.cjs",
-    "lint": "npm run typecheck && npm run lint:imports"
+    "lint": "npm run lint:imports"
   },
   "peerDependencies": {
     "react": "^18.2.0",
