@@ -4,6 +4,8 @@
 It is for easily using Websocket in React. It inspired by [React-redux](https://github.com/reduxjs/react-redux).<br>
 It is provider of [socket-store](https://github.com/nerdchanii/socket-store).
 
+`react-socket-store` depends on the public `socket-store` package contract. Its source imports runtime values and store contract types from the `socket-store` package root, not from generated `socket-store/dist/*` build paths.
+
 ## Quick Start
 
 
