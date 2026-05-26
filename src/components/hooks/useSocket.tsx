@@ -1,19 +1,24 @@
-import { useCallback } from "react";
-import { useSocketStore } from "../context";
+import type {
+  DefaultSchema,
+  SocketSchema,
+  TopicKey,
+  TopicPayload,
+  TopicState,
+} from "../../types";
 import { useListen } from "./useListen";
+import { useSend } from "./useSend";
 
-type Return = [any, (message: any) => void];
+export type UseSocketResult<
+  Schema extends SocketSchema,
+  K extends TopicKey<Schema>
+> = [TopicState<Schema, K>, (message: TopicPayload<Schema, K>) => void];
 
-export function useSocket(key: string): Return {
-  const store = useSocketStore();
-  const [state] = useListen(key);
-
-  const send = useCallback(
-    (message: any) => {
-      store.send({ key, data: message });
-    },
-    [store, key]
-  );
+export function useSocket<
+  Schema extends SocketSchema = DefaultSchema,
+  K extends TopicKey<Schema> = TopicKey<Schema>
+>(key: K): UseSocketResult<Schema, K> {
+  const [state] = useListen<Schema, K>(key);
+  const [send] = useSend<Schema, K>(key);
 
   return [state, send];
 }
