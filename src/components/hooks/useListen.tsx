@@ -1,13 +1,14 @@
-import { useContext, useEffect, useState } from "react";
-import ReactSocketContext from "../context";
+import { useCallback, useSyncExternalStore } from "react";
+import { useSocketStore } from "../context";
 
 export function useListen(key: string) {
-  const store = useContext(ReactSocketContext);
-  const [state, setState] = useState(store.getState(key));
-
-  useEffect(() => {
-    store.subscribe(key, setState);
-  }, [store, key]);
+  const store = useSocketStore();
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => store.subscribe(key, onStoreChange),
+    [store, key]
+  );
+  const getSnapshot = useCallback(() => store.getState(key), [store, key]);
+  const state = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 
   return [state];
 }

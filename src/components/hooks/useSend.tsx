@@ -1,12 +1,15 @@
-import { useContext } from "react";
-import ReactSocketContext from "../context";
+import { useCallback } from "react";
+import { useSocketStore } from "../context";
 
 export function useSend(key: string) {
-  const store = useContext(ReactSocketContext);
+  const store = useSocketStore();
 
-  return [
+  const send = useCallback(
     (message: string) => {
       store.send({ key, data: message });
     },
-  ];
+    [store, key]
+  );
+
+  return [send];
 }
