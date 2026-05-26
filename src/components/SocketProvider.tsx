@@ -1,16 +1,20 @@
 import React from "react";
-import type { ISocketStore } from "socket-store";
+import type { DefaultSchema, SocketSchema, SocketStoreLike } from "../types";
 import ReactSocketContext from "./context";
 
-export function SocketProvider({
+export type SocketProviderProps<
+  Schema extends SocketSchema = DefaultSchema
+> = {
+  children: React.ReactNode;
+  store: SocketStoreLike<Schema>;
+};
+
+export function SocketProvider<Schema extends SocketSchema = DefaultSchema>({
   children,
   store,
-}: {
-  children: React.ReactNode;
-  store: ISocketStore;
-}) {
+}: SocketProviderProps<Schema>) {
   return (
-    <ReactSocketContext.Provider value={store}>
+    <ReactSocketContext.Provider value={store as unknown as SocketStoreLike}>
       {children}
     </ReactSocketContext.Provider>
   );

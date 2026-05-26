@@ -142,6 +142,27 @@ const Component = (props: ComponentsProps)=>{
 }
 ```
 
+For topic-safe state and send payloads, provide a schema type:
+
+```tsx
+type SocketSchema = {
+  talk: {
+    state: string[];
+    payload: string;
+  };
+  trade: {
+    state: string | null;
+    payload: string;
+  };
+};
+
+const [messages, sendTalk] = useSocket<SocketSchema, "talk">("talk");
+
+sendTalk("hello");
+// TypeScript error: "talk" payloads must be strings.
+sendTalk(123);
+```
+
 
 #### 3-2. useSend
 

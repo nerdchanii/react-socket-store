@@ -1,18 +1,24 @@
 import { createContext, useContext } from "react";
-import type { ISocketStore } from "socket-store";
+import type { DefaultSchema, SocketSchema, SocketStoreLike } from "../types";
 
-const ReactSocketContext = createContext<ISocketStore | null>(null);
+const ReactSocketContext = createContext<SocketStoreLike | null>(null);
 
-export function useSocketStore(): ISocketStore {
-  const store = useContext(ReactSocketContext);
-
+export function assertSocketStore<
+  Schema extends SocketSchema = DefaultSchema
+>(store: SocketStoreLike | null): SocketStoreLike<Schema> {
   if (store === null) {
     throw new Error(
       "react-socket-store hooks must be used inside a SocketProvider."
     );
   }
 
-  return store;
+  return store as unknown as SocketStoreLike<Schema>;
+}
+
+export function useSocketStore<
+  Schema extends SocketSchema = DefaultSchema
+>(): SocketStoreLike<Schema> {
+  return assertSocketStore(useContext(ReactSocketContext));
 }
 
 export default ReactSocketContext;
