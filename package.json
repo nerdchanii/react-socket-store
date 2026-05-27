@@ -34,7 +34,7 @@
     "typecheck": "tsc --noEmit",
     "type-test": "tsc -p tsconfig.test-d.json",
     "test": "vitest run",
-    "lint:eslint": "eslint \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\"",
+    "lint:eslint": "eslint --max-warnings=0 \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\"",
     "lint:imports": "node scripts/check-public-imports.cjs",
     "lint": "npm run lint:imports && npm run lint:eslint && npm run typecheck && npm run type-test",
     "pack:dry-run": "npm pack --dry-run",

@@ -37,6 +37,7 @@ export default [
           varsIgnorePattern: "^_",
         },
       ],
+      "react-hooks/exhaustive-deps": "error",
     },
   },
 ];
