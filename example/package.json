@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "server": "node server.mjs",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
