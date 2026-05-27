@@ -62,5 +62,6 @@ React boundaries, examples, non-goals, and canonical public docs without
 re-reading every source file.
 
 Do not describe future docs tooling, protocol adapters, or runtime integrations
-as available unless a shipped source file or accepted issue explicitly scopes
-that support.
+as available unless shipped source, tests, or runnable examples prove that
+support. Accepted issues may justify future or deferred wording, not availability
+claims.
