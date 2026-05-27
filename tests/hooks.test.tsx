@@ -13,6 +13,7 @@ import { SocketProvider } from "../src/components/SocketProvider";
 import { useListen } from "../src/components/hooks/useListen";
 import { useSend } from "../src/components/hooks/useSend";
 import { useSocket } from "../src/components/hooks/useSocket";
+import { useSocketStoreRef } from "../src/components/hooks/useSocketStoreRef";
 import { assertSocketStore } from "../src/components/context";
 
 type TestSchema = {
@@ -152,6 +153,39 @@ describe("react-socket-store hooks", () => {
     expect(store.sent).toEqual([{ key: "trade", data: 42 }]);
   });
 
+  it("supports useSocket with an explicit store outside SocketProvider", () => {
+    const store = createStore();
+    const { result } = renderHook(() =>
+      useSocket<TestSchema, "talk">(store, "talk")
+    );
+
+    expect(result.current[0]).toEqual(["hello"]);
+
+    act(() => {
+      store.setState("talk", ["direct"]);
+      result.current[1]("message");
+    });
+
+    expect(result.current[0]).toEqual(["direct"]);
+    expect(store.sent).toEqual([{ key: "talk", data: "message" }]);
+  });
+
+  it("supports split hooks with an explicit store outside SocketProvider", () => {
+    const store = createStore();
+    const { result } = renderHook(() => ({
+      listen: useListen<TestSchema, "trade">(store, "trade"),
+      send: useSend<TestSchema, "trade">(store, "trade"),
+    }));
+
+    expect(result.current.listen[0]).toBe(1);
+
+    act(() => {
+      result.current.send[0](7);
+    });
+
+    expect(store.sent).toEqual([{ key: "trade", data: 7 }]);
+  });
+
   it("useSend sends the selected topic and payload", () => {
     const store = createStore();
     const { result } = renderHook(() => useSend<TestSchema, "talk">("talk"), {
@@ -230,5 +264,18 @@ describe("react-socket-store hooks", () => {
 
     expect(store.listenerCount("talk")).toBe(0);
     expect(store.subscriptions).toBe(store.unsubscriptions);
+  });
+
+  it("creates a stable store ref once per component instance", () => {
+    const stores = [createStore(), createStore()];
+    const { result, rerender } = renderHook(() =>
+      useSocketStoreRef<TestSchema>(() => stores.shift() ?? createStore())
+    );
+    const firstStore = result.current;
+
+    rerender();
+
+    expect(result.current).toBe(firstStore);
+    expect(stores).toHaveLength(1);
   });
 });
