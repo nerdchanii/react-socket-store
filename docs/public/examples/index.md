@@ -4,6 +4,32 @@ The runnable example app lives in `example/`. Keep written examples short and
 directly adaptable from runnable source instead of copying large files into the
 docs.
 
+## Local Vite Example
+
+The Vite example includes a minimal local WebSocket echo server, so it does not
+need external infrastructure. From `example/`, install dependencies, then run
+the server and browser app in separate terminals:
+
+```bash
+npm install
+npm run server
+```
+
+```bash
+npm run dev
+```
+
+The app connects to `ws://localhost:3000`. When the chat form submits, the
+client sends a `socket-store` topic message shaped like
+`{ "key": "talk", "data": "<message>" }`. The local server echoes valid topic
+messages back to the same client, and the `talk` message handler appends the
+payload to the visible chat state.
+
+Closing the browser tab closes the WebSocket connection. Stopping the local
+server with `Ctrl+C` closes any connected example clients. Run
+`npm run build` from `example/` after building the package root to verify the
+example app.
+
 A minimal component can subscribe and send through one topic:
 
 ```tsx
