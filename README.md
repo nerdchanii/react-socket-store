@@ -8,6 +8,23 @@ It is provider of [socket-store](https://github.com/nerdchanii/socket-store).
 
 Full guides live in [docs/public](./docs/public/).
 
+## Package Boundary and Compatibility
+
+`socket-store` owns framework-agnostic WebSocket behavior: message handler
+routing, topic state updates, `send({ key, data })`, `getState(key)`,
+subscription semantics, unknown-key behavior, duplicate handler validation, and
+connection lifecycle callbacks.
+
+`react-socket-store` owns the React integration layer: `SocketProvider`,
+`useSocket`, `useListen`, `useSend`, schema-safe hook types, and React
+subscription cleanup through `useSyncExternalStore`.
+
+The current adapter release depends on `socket-store@^0.0.2` and intentionally
+keeps local adapter contract types until a later `socket-store` release exposes
+the stronger adapter type surface on npm. When React adapter code needs a new
+core contract, release `socket-store` first, then update and release
+`react-socket-store`. This change does not introduce a breaking migration.
+
 ## Quick Start
 
 
