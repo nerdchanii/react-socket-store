@@ -77,9 +77,9 @@
     "docs/project/check-failure-playbook.md"
   ],
   "examples": [
-    { "name": "provider-backed React app", "path": "docs/public/examples/index.md#provider-example", "source": "README.md" },
-    { "name": "store-direct hook usage", "path": "docs/public/examples/index.md#store-direct-example", "source": "docs/public/guide/index.md" },
-    { "name": "Next.js App Router client island", "path": "docs/public/examples/index.md#nextjs-app-router-example", "source": "docs/public/nextjs/index.md" },
+    { "name": "provider-backed React app", "path": "docs/public/examples/index.md#local-vite-provider-example", "source": "README.md" },
+    { "name": "store-direct hook usage", "path": "docs/public/examples/index.md#react-router-loader-initial-snapshot", "source": "docs/public/guide/index.md" },
+    { "name": "Next.js App Router client island", "path": "docs/public/examples/index.md#next-js-app-router-client-island", "source": "docs/public/nextjs/index.md" },
     { "name": "runnable Vite example", "path": "example/", "source": "example/README.md" }
   ],
   "clientOnlyConstraints": [
