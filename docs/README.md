@@ -11,7 +11,8 @@ docs will expose.
 - `docs/agents/`: LLM-readable package context, indexes, and structured
   metadata.
 - `docs/project/`: maintainer-facing planning notes that should not be treated
-  as public package documentation.
+  as public package documentation. Start with
+  `docs/project/socket-store-contract-map.md` for cross-package contract work.
 
 Root files keep their existing roles: `README.md` is the concise package
 overview, `example/` contains runnable app code, and `src/` is the source of
