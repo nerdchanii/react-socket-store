@@ -27,13 +27,65 @@ const store = new SocketStore(new WebSocket("ws://localhost:3000"), [
 
 `SocketProvider` is an optional SPA-friendly convenience. Use it when many
 descendants in one client-rendered subtree should share the same store through
-context.
+context. Create the socket and store in lifecycle code, render the provider
+only after the store exists, and close resources from the owner that created
+them:
 
 ```tsx
-import { SocketProvider } from "react-socket-store";
+import { useEffect, useState } from "react";
+import {
+  SocketProvider,
+  SocketStore,
+  createMessageHandler,
+  useSocket,
+} from "react-socket-store";
 
-export function RealtimeSubtree({ store, children }) {
-  return <SocketProvider store={store}>{children}</SocketProvider>;
+type ChatSchema = {
+  talk: {
+    state: string[];
+    payload: string;
+  };
+};
+
+function ChatMessages() {
+  const [messages, sendTalk] = useSocket<ChatSchema, "talk">("talk");
+
+  return (
+    <button type="button" onClick={() => sendTalk("hello")}>
+      Messages: {messages.length}
+    </button>
+  );
+}
+
+export function ChatProviderBoundary() {
+  const [store, setStore] = useState<SocketStore<ChatSchema> | null>(null);
+
+  useEffect(() => {
+    const socket = new WebSocket("wss://example.com/chat");
+    const nextStore = new SocketStore<ChatSchema>(socket, [
+      createMessageHandler<string[], string, "talk">(
+        "talk",
+        (messages, message) => [...messages, message],
+        []
+      ),
+    ]);
+
+    setStore(nextStore);
+
+    return () => {
+      socket.close();
+    };
+  }, []);
+
+  if (store === null) {
+    return null;
+  }
+
+  return (
+    <SocketProvider store={store}>
+      <ChatMessages />
+    </SocketProvider>
+  );
 }
 ```
 
@@ -47,11 +99,18 @@ sends:
 Provide a schema type when you want TypeScript to connect topic names to state
 and payload types.
 
+`SocketProvider` only supplies the store through React context. It does not
+create or close the `WebSocket`, so the component that creates the socket owns
+that cleanup. `useListen` and `useSocket` unsubscribe from the selected topic
+when the consuming component unmounts, or when its topic or store changes, when
+the store returns an unsubscribe callback from `subscribe`.
+
 Do not put `SocketProvider` at the app root just to make a small widget work.
 If only one focused subtree needs realtime state, pass the store directly to
-that subtree instead. In Next.js App Router, avoid putting `SocketProvider` in a
-root layout when that would turn the layout and its imports into a Client
-Component; see the [Next.js guide](../nextjs/) for client-boundary placement.
+that subtree instead with [store-direct hooks](#store-direct-usage). In Next.js
+App Router, avoid putting `SocketProvider` in a root layout when that would turn
+the layout and its imports into a Client Component; see the
+[Next.js guide](../nextjs/) for client-boundary placement.
 
 ## Store-Direct Usage
 
