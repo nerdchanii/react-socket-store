@@ -205,9 +205,14 @@ fs.writeFileSync(
 );
 
 const result = spawnSync(
-  path.join(root, "node_modules", ".bin", "tsc"),
+  path.join(
+    root,
+    "node_modules",
+    ".bin",
+    process.platform === "win32" ? "tsc.cmd" : "tsc"
+  ),
   ["-p", path.join(outDir, "tsconfig.json")],
-  { cwd: root, encoding: "utf8" }
+  { cwd: root, encoding: "utf8", shell: process.platform === "win32" }
 );
 
 if (result.status !== 0) {
