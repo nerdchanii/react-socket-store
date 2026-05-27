@@ -32,9 +32,10 @@ exports only.
 
 ## Release Order
 
-Release `socket-store` first when adapter work depends on new core behavior or
-new public core types. After the core package is available on npm, update
-`react-socket-store` to consume that public contract and release the adapter.
+Release `socket-store` first when adapter work depends on new core behavior, new
+public core types, or a higher minimum core version. After the core package is
+available on npm, update `react-socket-store` to consume that public contract
+through package-root exports and release the adapter.
 
 Adapter-only docs, examples, hook tests, and React cleanup fixes can release
 without a core release when they do not require a new core contract.
@@ -42,3 +43,5 @@ without a core release when they do not require a new core contract.
 No breaking migration is required for the current compatibility boundary. If a
 future adapter release requires a newer core contract, document the minimum
 `socket-store` version and migration notes before publishing.
+
+Maintainer release gates live in `docs/project/release-order.md`.
