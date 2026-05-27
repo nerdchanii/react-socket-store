@@ -51,7 +51,6 @@ import {
   useListen,
   useSend,
   useSocket,
-  useSocketStoreRef,
   type ISocketStore,
 } from "react-socket-store";
 
@@ -63,8 +62,7 @@ type ChatSchema = {
 };
 
 export function ChatClient({ store }: { store: ISocketStore<ChatSchema> }) {
-  const stableStore = useSocketStoreRef(() => store);
-  const [messages, sendTalk] = useSocket(stableStore, "talk");
+  const [messages, sendTalk] = useSocket(store, "talk");
 
   return (
     <button type="button" onClick={() => sendTalk("hello")}>
@@ -78,9 +76,8 @@ The same explicit store argument works with the split hooks:
 
 ```tsx
 function ChatSummary({ store }: { store: ISocketStore<ChatSchema> }) {
-  const stableStore = useSocketStoreRef(() => store);
-  const [messages] = useListen(stableStore, "talk");
-  const [sendTalk] = useSend(stableStore, "talk");
+  const [messages] = useListen(store, "talk");
+  const [sendTalk] = useSend(store, "talk");
 
   return (
     <button type="button" onClick={() => sendTalk("hello")}>
@@ -93,6 +90,10 @@ function ChatSummary({ store }: { store: ISocketStore<ChatSchema> }) {
 Create `WebSocket` and `SocketStore` instances in client lifecycle code that can
 clean them up, then pass the store into store-direct components. Do not open a
 socket inside `useSocketStoreRef`; React may discard render work before commit.
+If a parent may replace the store prop, pass that prop directly so the hooks can
+resubscribe to the new store. Use `useSocketStoreRef` only for a
+side-effect-free store factory whose result should stay fixed for the component
+lifetime.
 `useListen` and `useSocket` unsubscribe from the selected topic when the
 component unmounts or when the explicit store or topic changes.
 

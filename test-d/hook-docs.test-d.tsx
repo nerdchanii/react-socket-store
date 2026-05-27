@@ -34,9 +34,8 @@ function DirectSocketHookExample() {
 }
 
 function DirectSplitHookExample({ store }: { store: ISocketStore<ChatSchema> }) {
-  const stableStore = useSocketStoreRef(() => store);
-  const [messages] = useListen(stableStore, "talk");
-  const [sendTalk] = useSend(stableStore, "talk");
+  const [messages] = useListen(store, "talk");
+  const [sendTalk] = useSend(store, "talk");
 
   return (
     <button type="button" onClick={() => sendTalk("hello")}>
