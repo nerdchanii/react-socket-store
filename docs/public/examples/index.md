@@ -10,7 +10,7 @@ large files into the docs.
 | --- | --- | --- | --- | --- | --- |
 | [Local Vite provider example](#local-vite-provider-example) | Run a browser app that shares one store through `SocketProvider`. | From `example/`, run `npm install`, `npm run server`, and `npm run dev` in separate terminals. | The form sends `{ "key": "talk", "data": "<message>" }` to `ws://localhost:3000`; the local server echoes valid topic messages; the `talk` handler appends payloads to chat state. | Close the browser tab to close the client socket. Stop the server with `Ctrl+C` to close connected clients. | Safe for sample apps and manual demos. For tests, copy the provider and hook shape, not the browser-only module-level `WebSocket` setup. |
 | [React Router loader initial snapshot](#react-router-loader-initial-snapshot) | Seed a client-owned store from route loader data without adding a provider boundary. | Adapt into a React Router route with a loader that returns serializable initial messages. | The loader returns a snapshot; the client route creates the store after mount; `useSocket(store, "talk")` reads the seeded state and receives realtime updates. | The route cleanup closes the route-owned socket. Hook subscriptions clean up when the store provides unsubscribe callbacks. | Safe for tests or sample apps that pass an explicit store into components. Replace `wss://example.com/chat` with test or app infrastructure. |
-| [Next.js App Router client island](#next-js-app-router-client-island) | Keep request data on the server and realtime store ownership inside a focused Client Component. | Adapt into App Router with a Server Component page and a `"use client"` island. | The server passes a serializable snapshot; the island creates one store per mounted boundary; `useSocket(store, "talk")` reads and sends through that store. | The island effect cleanup calls `nextStore.dispose()` and `socket.close()`. Hook subscriptions clean up on unmount or store/topic changes. | Safe for App Router sample apps and client-island tests. Do not copy it into a Server Component or shared module singleton. |
+| [Next.js App Router client island](#next-js-app-router-client-island) | Keep request data on the server and realtime store ownership inside a focused Client Component. | Adapt into App Router with a Server Component page and a `"use client"` island. | The server passes a serializable snapshot; the island creates one store per mounted boundary; `useSocket(store, "talk")` reads and sends through that store. | The island effect cleanup calls `socket.close()`. Hook subscriptions clean up on unmount or store/topic changes. | Safe for App Router sample apps and client-island tests. Do not copy it into a Server Component or shared module singleton. |
 
 ## Local Vite Provider Example
 
@@ -237,7 +237,11 @@ island owns the `WebSocket` and `SocketStore` lifecycle:
 "use client";
 
 import { useEffect, useState } from "react";
-import { SocketStore, createMessageHandler } from "react-socket-store";
+import {
+  SocketStore,
+  createMessageHandler,
+  type ISocketStore,
+} from "react-socket-store";
 import { ChatClient, type Message } from "./ChatClient";
 
 type ChatSchema = {
@@ -252,22 +256,21 @@ export function ChatIsland({
 }: {
   initialMessages: Message[];
 }) {
-  const [store, setStore] = useState<SocketStore<ChatSchema> | null>(null);
+  const [store, setStore] = useState<ISocketStore<ChatSchema> | null>(null);
 
   useEffect(() => {
     const socket = new WebSocket("wss://example.com/chat");
-    const nextStore = new SocketStore<ChatSchema>(socket, [
-      createMessageHandler<Message[], Message, "talk">(
+    const nextStore = new SocketStore(socket, [
+      createMessageHandler<Message[], Message>(
         "talk",
         (messages, message) => [...messages, message],
         initialMessages
       ),
-    ]);
+    ]) as unknown as ISocketStore<ChatSchema>;
 
     setStore(nextStore);
 
     return () => {
-      nextStore.dispose();
       socket.close();
     };
   }, [initialMessages]);

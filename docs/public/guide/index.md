@@ -38,6 +38,7 @@ import {
   SocketStore,
   createMessageHandler,
   useSocket,
+  type ISocketStore,
 } from "react-socket-store";
 
 type ChatSchema = {
@@ -58,17 +59,17 @@ function ChatMessages() {
 }
 
 export function ChatProviderBoundary() {
-  const [store, setStore] = useState<SocketStore<ChatSchema> | null>(null);
+  const [store, setStore] = useState<ISocketStore<ChatSchema> | null>(null);
 
   useEffect(() => {
     const socket = new WebSocket("wss://example.com/chat");
-    const nextStore = new SocketStore<ChatSchema>(socket, [
-      createMessageHandler<string[], string, "talk">(
+    const nextStore = new SocketStore(socket, [
+      createMessageHandler<string[], string>(
         "talk",
         (messages, message) => [...messages, message],
         []
       ),
-    ]);
+    ]) as unknown as ISocketStore<ChatSchema>;
 
     setStore(nextStore);
 

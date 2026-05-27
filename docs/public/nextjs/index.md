@@ -63,7 +63,11 @@ seed the topic handler with that snapshot:
 "use client";
 
 import { useEffect, useState } from "react";
-import { SocketStore, createMessageHandler } from "react-socket-store";
+import {
+  SocketStore,
+  createMessageHandler,
+  type ISocketStore,
+} from "react-socket-store";
 import { ChatClient } from "./ChatClient";
 
 type ChatSchema = {
@@ -74,22 +78,21 @@ type ChatSchema = {
 };
 
 export function ChatIsland({ initialMessages }: { initialMessages: string[] }) {
-  const [store, setStore] = useState<SocketStore<ChatSchema> | null>(null);
+  const [store, setStore] = useState<ISocketStore<ChatSchema> | null>(null);
 
   useEffect(() => {
     const socket = new WebSocket("wss://example.com/chat");
-    const nextStore = new SocketStore<ChatSchema>(socket, [
-      createMessageHandler<string[], string, "talk">(
+    const nextStore = new SocketStore(socket, [
+      createMessageHandler<string[], string>(
         "talk",
         (state, message) => [...state, message],
         [...initialMessages]
       ),
-    ]);
+    ]) as unknown as ISocketStore<ChatSchema>;
 
     setStore(nextStore);
 
     return () => {
-      nextStore.dispose();
       socket.close();
     };
   }, [initialMessages]);
