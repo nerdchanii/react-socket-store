@@ -150,14 +150,16 @@ function useSocketStoreRef<
 >(createStore: () => Store): Store;
 ```
 
-`useSocketStoreRef(createStore)` creates one store for the component instance
-and returns the same store across re-renders. Use it in client components when a
-store should be owned by a focused React boundary instead of a broad provider.
+`useSocketStoreRef(createStore)` stores the result of a side-effect-free factory
+for the component instance and returns the same store across re-renders. Use it
+only with a precreated store reference or another pure factory. Do not open a
+`WebSocket` or allocate external resources inside this factory because React can
+discard render attempts before commit.
 
 ```tsx
-function ChatClient() {
-  const store = useSocketStoreRef(() => chatStore);
-  const [messages, sendTalk] = useSocket(store, "talk");
+function ChatClient({ store }: { store: ISocketStore<ChatSchema> }) {
+  const stableStore = useSocketStoreRef(() => store);
+  const [messages, sendTalk] = useSocket(stableStore, "talk");
 
   sendTalk("hello");
 
