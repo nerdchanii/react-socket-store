@@ -21,4 +21,12 @@ export function useSocketStore<
   return assertSocketStore(useContext(ReactSocketContext));
 }
 
+export function useProvidedOrContextStore<
+  Schema extends SocketSchema = DefaultSchema
+>(store?: SocketStoreLike<Schema>): SocketStoreLike<Schema> {
+  const contextStore = useContext(ReactSocketContext);
+
+  return store ?? assertSocketStore(contextStore);
+}
+
 export default ReactSocketContext;
