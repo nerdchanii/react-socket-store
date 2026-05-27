@@ -1,0 +1,67 @@
+# react-socket-store
+
+react-socket-store is the React adapter for socket-store. It provides
+SocketProvider and hooks for reading topic state, sending topic payloads, and
+cleaning up subscriptions in React components.
+
+Canonical docs:
+
+- Public docs index:
+  `docs/public/index.md`
+- Provider setup and store-direct hook guidance:
+  `docs/public/guide/index.md`
+- Hook API for `useSocket`, `useListen`, `useSend`, and `useSocketStoreRef`:
+  `docs/public/api/index.md`
+- Provider, store-direct, and Next.js App Router examples:
+  `docs/public/examples/index.md`
+- Next.js client-boundary guidance:
+  `docs/public/nextjs/index.md`
+- Package ownership, compatible socket-store version, and release order:
+  `docs/public/compatibility/index.md`
+- Current migration and package-boundary notes:
+  `docs/public/migration/index.md`
+- Documentation structure and agent-readable docs policy:
+  `docs/README.md`
+- Documentation wording rules and source checks:
+  `docs/style-guide.md`
+- Agent examples reference:
+  `docs/agents/examples.md`
+
+Source and example entrypoints:
+
+- Public package exports:
+  `src/index.ts`
+- Provider and context behavior:
+  `src/components/SocketProvider.tsx` and `src/components/context.ts`
+- Hook implementations:
+  `src/components/hooks/`
+- Public React adapter types:
+  `src/types.ts`
+- Runnable Vite example:
+  `example/`
+
+Use socket-store for core WebSocket topic-store behavior:
+
+- socket-store repository:
+  `https://github.com/nerdchanii/socket-store`
+- socket-store public docs:
+  `https://nerdchanii.github.io/socket-store/`
+
+Supported React shapes:
+
+- Use `SocketProvider` when an SPA subtree should share one store through
+  React context.
+- Use store-direct hooks when a component already owns or receives a store.
+  This is the preferred shape for focused client islands, data-loader patterns,
+  and Next.js App Router code.
+- Keep Next.js WebSocket store creation and hook usage inside Client
+  Components. Pass serializable snapshots across Server Component boundaries.
+
+Non-goals:
+
+- react-socket-store does not own core protocol parsing, reconnect behavior,
+  persistence, server behavior, or socket-store lifecycle semantics.
+- It does not provide A2A protocol support, RPC behavior, CRDT behavior, or a
+  server/runtime integration beyond React provider and hook wiring.
+- Do not document future socket-store behavior as available until source,
+  tests, examples, and public package versions support it.
