@@ -21,3 +21,142 @@ export function TalkBox() {
 ```
 
 Use `npm run docs:build` to verify the public docs site.
+
+## Next.js App Router Client Island
+
+In App Router, keep request-scoped data fetching in the Server Component and
+create the realtime store inside a focused Client Component island.
+
+```tsx
+// app/chat/page.tsx
+import { ChatIsland } from "./ChatIsland";
+
+type Message = {
+  id: string;
+  text: string;
+};
+
+async function getInitialMessages(): Promise<Message[]> {
+  const response = await fetch("https://example.com/api/chat", {
+    cache: "no-store",
+  });
+
+  return response.json();
+}
+
+export default async function Page() {
+  const initialMessages = await getInitialMessages();
+
+  return <ChatIsland initialMessages={initialMessages} />;
+}
+```
+
+The server passes only serializable data across the RSC boundary. The client
+island owns the `WebSocket` and `SocketStore` lifecycle:
+
+```tsx
+// app/chat/ChatIsland.tsx
+"use client";
+
+import { useEffect, useState } from "react";
+import { SocketStore, createMessageHandler } from "react-socket-store";
+import { ChatClient, type Message } from "./ChatClient";
+
+type ChatSchema = {
+  talk: {
+    state: Message[];
+    payload: Message;
+  };
+};
+
+export function ChatIsland({
+  initialMessages,
+}: {
+  initialMessages: Message[];
+}) {
+  const [store, setStore] = useState<SocketStore<ChatSchema> | null>(null);
+
+  useEffect(() => {
+    const socket = new WebSocket("wss://example.com/chat");
+    const nextStore = new SocketStore<ChatSchema>(socket, [
+      createMessageHandler<Message[], Message, "talk">(
+        "talk",
+        (messages, message) => [...messages, message],
+        initialMessages
+      ),
+    ]);
+
+    setStore(nextStore);
+
+    return () => {
+      nextStore.dispose();
+      socket.close();
+    };
+  }, [initialMessages]);
+
+  if (store === null) {
+    return <p>Messages: {initialMessages.length}</p>;
+  }
+
+  return <ChatClient store={store} />;
+}
+```
+
+The child component can use the store-direct hook overload, so no root layout
+has to become a Client Component only to host `SocketProvider`:
+
+```tsx
+// app/chat/ChatClient.tsx
+"use client";
+
+import { FormEvent, useState } from "react";
+import { useSocket, type ISocketStore } from "react-socket-store";
+
+export type Message = {
+  id: string;
+  text: string;
+};
+
+type ChatSchema = {
+  talk: {
+    state: Message[];
+    payload: Message;
+  };
+};
+
+export function ChatClient({ store }: { store: ISocketStore<ChatSchema> }) {
+  const [draft, setDraft] = useState("");
+  const [messages, sendTalk] = useSocket(store, "talk");
+
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    sendTalk({ id: crypto.randomUUID(), text: draft });
+    setDraft("");
+  }
+
+  return (
+    <form onSubmit={submit}>
+      <ul>
+        {messages.map((message) => (
+          <li key={message.id}>{message.text}</li>
+        ))}
+      </ul>
+      <input value={draft} onChange={(event) => setDraft(event.target.value)} />
+      <button type="submit">Send</button>
+    </form>
+  );
+}
+```
+
+Message flow:
+
+1. `app/chat/page.tsx` fetches request-scoped initial messages on the server.
+2. `ChatIsland` receives that snapshot as props and creates one client-owned
+   store for the mounted realtime boundary.
+3. The `talk` handler seeds the store with the server snapshot before
+   `ChatClient` subscribes.
+4. `ChatClient` reads and sends through `useSocket(store, "talk")`; incoming
+   socket messages update the same topic state.
+
+Do not put a user-specific `SocketStore` in a shared module or Server Component.
+For more App Router placement rules, see the [Next.js guide](../nextjs/).
