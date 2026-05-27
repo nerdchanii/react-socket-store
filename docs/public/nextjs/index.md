@@ -3,6 +3,9 @@
 `react-socket-store` hooks that create or consume WebSocket stores belong in
 client-rendered components. In App Router projects, keep server-fetched data in
 Server Components and pass initial snapshots into focused Client Components.
+This follows the current Next.js App Router model: pages and layouts are Server
+Components by default, while files that use hooks, effects, event handlers, or
+browser APIs must opt into the client boundary with `"use client"`.
 
 ## Server And Client Responsibilities
 
@@ -27,6 +30,15 @@ Those stores can leak request data between users and cannot cross the RSC
 serialization boundary. Next.js request memoization and opt-in data caching are
 for application data fetching, not for sharing a mutable `SocketStore` that
 contains user-specific realtime state.
+
+Use this placement rule for App Router code:
+
+- Server Components may fetch data and pass serializable initial snapshots.
+- Client Components may create `WebSocket` and `SocketStore` instances.
+- Client Components may call `useSocket`, `useListen`, `useSend`, and
+  `useSocketStoreRef`.
+- Shared modules must not hold request-specific or user-specific store
+  singletons.
 
 ## Client Island With Initial Snapshot
 
@@ -135,3 +147,5 @@ read uses the store's current `getState(topic)` snapshot, so the hook does not
 need a separate initial-state option.
 
 For the store-direct hook signatures, see the [API guide](../api/#hook-api).
+For a shorter provider-based example that mirrors the runnable Vite demo shape,
+see the [examples guide](../examples/).
