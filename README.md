@@ -6,6 +6,8 @@ It is provider of [socket-store](https://github.com/nerdchanii/socket-store).
 
 `react-socket-store` depends on the public `socket-store` package contract. Its source imports runtime values and store contract types from the `socket-store` package root, not from generated `socket-store/dist/*` build paths.
 
+Full guides live in [docs/public](./docs/public/).
+
 ## Quick Start
 
 
@@ -15,11 +17,11 @@ It is provider of [socket-store](https://github.com/nerdchanii/socket-store).
 ```bash
 #npm
 
-npm install react-socket-store
+npm install react-socket-store socket-store
 
 #yarn
 
-yarn add react-socket-store
+yarn add react-socket-store socket-store
 ```
 
 
@@ -30,7 +32,7 @@ yarn add react-socket-store
 MesssageHandler and Socket store is based on [socket-store](https://github.com/nerdchanii/socket-store).
 
 - [createMessageHandler](#2-1-create-messagehandler)
-- [createSocketStore](#2-2-create-socketstore)
+- [SocketStore](#2-2-create-socketstore)
 
 #### 2-1. Create MessageHandler
 
@@ -44,6 +46,8 @@ Define the topic, callback for the topic, and default status. This will be provi
   - `state`: it is defualt state.
 
 ```ts
+import { createMessageHandler } from "react-socket-store";
+
 const talkHandler = createMessageHandler<string[], string>(
   "talk",
   (state, data) => {
@@ -64,18 +68,14 @@ Store gets two or three parameters for web sockets and message handlers.
 2. `array of message handler`,
 3. `options` options has callbacks about connection status.
 
-- createSocketStore(ws: WebSocket, messageHandlers: MessageHandler[], options?: SocketStoreOptions)
+- new SocketStore(ws: WebSocket, messageHandlers: MessageHandler[], options?: SocketStoreOptions)
 
 ```ts
-const socketStore = createSocketStore(
-  new WebSocket("ws://localhost:3000"),
-  [talkHandler],
-  {
-    onOpen: () => console.log("open"),
-    onClose: () => console.log("close"),
-    onError: () => console.log("error"),
-  }
-);
+import { SocketStore } from "react-socket-store";
+
+const socketStore = new SocketStore(new WebSocket("ws://localhost:3000"), [
+  talkHandler,
+]);
 ```
 
 
@@ -85,16 +85,29 @@ const socketStore = createSocketStore(
 - Wrap your `<App>` with `<SocketProvider>`, and provide a previously created store as a prop for the socket provider.
 
 ```tsx
-import { SocketProvider } from "react-socket-store";
-import store from "./store";
+import type { ReactNode } from "react";
+import { SocketProvider, type ISocketStore } from "react-socket-store";
 
-const Index = (prop: Props) => {
+type ChatSchema = {
+  talk: {
+    state: string[];
+    payload: string;
+  };
+};
+
+function AppRoot({
+  store,
+  children,
+}: {
+  store: ISocketStore<ChatSchema>;
+  children: ReactNode;
+}) {
   return (
-    <SocketProvider store={store}>
-      <App />
+    <SocketProvider<ChatSchema> store={store}>
+      {children}
     </SocketProvider>
   );
-};
+}
 ```
 
 
@@ -115,37 +128,38 @@ we supply API for using SocketStore, by hooks.
 `useSocket` gets the parameter for the key of the MessageHandler, and returns the state, and sendfunction for the key.
 
 ```tsx
-const Component = (props: ComponentsProps)=>{
-  const [value, setValue] = useState('');
-  const [state, send] = useSocket('talk');
+import { FormEvent, useState } from "react";
+import { useSocket } from "react-socket-store";
 
-  const onChange = (e)=>{
-    setValue(e.target.value);
-  }
+function ChatBox() {
+  const [value, setValue] = useState("");
+  const [messages, sendTalk] = useSocket<ChatSchema, "talk">("talk");
 
-  const submit = (e)=>{
-    e.preventDefault();
-    send(value);
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    sendTalk(value);
+    setValue("");
   }
 
   return (
     <>
-    <div>
-    {state.map(message)=> <span>{message}</span>}
-    </div>
-    <form onSubmit={submit}>
-      <input value={value} onChange={onChange} />
-    </form>
+      <div>
+        {messages.map((message) => (
+          <span key={message}>{message}</span>
+        ))}
+      </div>
+      <form onSubmit={submit}>
+        <input value={value} onChange={(event) => setValue(event.target.value)} />
+      </form>
     </>
-
-  )
+  );
 }
 ```
 
 For topic-safe state and send payloads, provide a schema type:
 
 ```tsx
-type SocketSchema = {
+type ChatSchema = {
   talk: {
     state: string[];
     payload: string;
@@ -156,7 +170,7 @@ type SocketSchema = {
   };
 };
 
-const [messages, sendTalk] = useSocket<SocketSchema, "talk">("talk");
+const [messages, sendTalk] = useSocket<ChatSchema, "talk">("talk");
 
 sendTalk("hello");
 // TypeScript error: "talk" payloads must be strings.
@@ -170,27 +184,24 @@ sendTalk(123);
   only sendfunction for the key.
 
 ```tsx
-const Component = (props: ComponentsProps) => {
+import { FormEvent, useState } from "react";
+import { useSend } from "react-socket-store";
+
+function SendBox() {
   const [value, setValue] = useState("");
-  const [send] = useSend("talk");
+  const [sendTalk] = useSend<ChatSchema, "talk">("talk");
 
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
-
-  const submit = (e) => {
-    e.preventDefault();
-    send(value);
-  };
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    sendTalk(value);
+  }
 
   return (
-    <>
-      <form onSubmit={submit}>
-        <input value={value} onChange={onChange} />
-      </form>
-    </>
+    <form onSubmit={submit}>
+      <input value={value} onChange={(event) => setValue(event.target.value)} />
+    </form>
   );
-};
+}
 ```
 
 
@@ -200,16 +211,22 @@ const Component = (props: ComponentsProps) => {
   only state for the key.
 
 ```tsx
-const Component = (props: ComponentsProps) => {
-  const [state] = useListen("talk");
+import { useListen } from "react-socket-store";
 
-  return(
+function MessageList() {
+  const [messages] = useListen<ChatSchema, "talk">("talk");
+
+  return (
     <div>
-      {state.map((message)=> <span>{message}</span>)}
+      {messages.map((message) => (
+        <span key={message}>{message}</span>
+      ))}
     </div>
-  )
-};
+  );
+}
 ```
+
+The README examples are mirrored by `test-d/readme.test-d.tsx`.
 
 
 
