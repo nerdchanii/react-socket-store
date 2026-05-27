@@ -16,7 +16,7 @@ subscription semantics, unknown-key behavior, duplicate handler validation, and
 connection lifecycle callbacks.
 
 `react-socket-store` owns the React integration layer: `SocketProvider`,
-`useSocket`, `useListen`, `useSend`, schema-safe hook types, and React
+store-direct hooks, `useSocketStoreRef`, schema-safe hook types, and React
 subscription cleanup through `useSyncExternalStore`.
 
 The current adapter release depends on `socket-store@^0.0.2` and intentionally
@@ -96,7 +96,25 @@ const socketStore = new SocketStore(new WebSocket("ws://localhost:3000"), [
 ```
 
 
-#### 2-3. Provider
+#### 2-3. Store Ownership
+
+You can pass a store directly to hooks when a component owns its realtime
+boundary:
+
+```tsx
+import { useSocket, useSocketStoreRef } from "react-socket-store";
+
+function ChatClient() {
+  const store = useSocketStoreRef(() => socketStore);
+  const [messages, sendTalk] = useSocket<ChatSchema, "talk">(store, "talk");
+
+  sendTalk("hello");
+
+  return <p>{messages.join(", ")}</p>;
+}
+```
+
+For SPA compatibility, you can also wrap a subtree with `<SocketProvider>`.
 
 
 - Wrap your `<App>` with `<SocketProvider>`, and provide a previously created store as a prop for the socket provider.
