@@ -6,10 +6,8 @@ docs will expose.
 
 ## Intended Layout
 
-- `docs/guide/`: public user-facing guides, tutorials, API usage pages, React
-  integration notes, and migration notes.
-- `docs/examples/`: written walkthroughs for runnable or directly adaptable
-  examples. Do not copy large source files from `example/`.
+- `docs/public/`: VitePress source for public user-facing guides, API usage
+  pages, examples, migration notes, and React integration notes.
 - `docs/agents/`: LLM-readable package context, indexes, and structured
   metadata.
 - `docs/project/`: maintainer-facing planning notes that should not be treated

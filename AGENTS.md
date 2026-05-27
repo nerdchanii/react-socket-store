@@ -18,9 +18,10 @@ React provider, hook, type, documentation, and package-boundary work.
 
 ## Documentation Scope
 
-- Current public docs live in `README.md` and `docs/README.md`.
-- `docs/guide/`, `docs/examples/`, and `docs/agents/` are intended future
-  locations. Create them only when the issue scope calls for that content.
+- Current public docs live in `README.md` and `docs/public/`.
+- `docs/README.md` describes the documentation layout.
+- Agent-readable package context belongs in `docs/agents/` when the issue scope
+  calls for that content.
 - Maintainer planning and failure guidance live in `docs/project/`; do not treat
   these notes as public package guarantees.
 - Before changing public docs or examples, read `docs/README.md`,
@@ -48,12 +49,13 @@ Use existing package scripts as executable conventions:
 - `npm run lint`
 - `npm test`
 - `npm run build`
+- `npm run docs:build`
 - `npm run pack:dry-run`
 - `npm run prepack`
 
-There is no docs build or automated example build script yet. If one is added,
-route failures through `docs/project/check-failure-playbook.md` and keep fixes
-tied to source-backed documentation or runnable examples.
+There is no automated example build script yet. If one is added, route failures
+through `docs/project/check-failure-playbook.md` and keep fixes tied to
+source-backed documentation or runnable examples.
 
 Do not publish npm releases, rename packages, or move this package into a
 monorepo unless explicitly requested.

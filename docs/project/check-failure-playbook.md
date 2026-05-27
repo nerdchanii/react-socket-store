@@ -15,10 +15,11 @@ cause over weakening a rule, skipping a test, or narrowing CI coverage.
 - `npm run type-test`: compiles `test-d/` type assertions.
 - `npm test`: runs runtime hook tests with Vitest.
 - `npm run build`: emits ESM and CJS package output into `lib/`.
+- `npm run docs:build`: builds the public VitePress docs from `docs/public/`.
 - `npm run pack:dry-run`: validates package contents without publishing.
 - `npm run prepack`: runs lint, tests, and build before packaging.
 
-CI runs `npm run lint`, `npm test`, `npm run build`, and
+CI runs `npm run lint`, `npm test`, `npm run build`, `npm run docs:build`, and
 `npm run pack:dry-run` against React 18 and React 19.
 
 ## Failure Response
@@ -39,13 +40,14 @@ and fix the failing contract at its source.
   runtime behavior. Do not delete assertions to preserve existing behavior.
 - For `npm run build`, fix source, TypeScript config, or package output paths.
   Build failures should not be bypassed with manual `lib/` edits.
+- For `docs:build`, fix broken public docs links, VitePress config, or
+  source-backed documentation in `docs/public/`.
 - For `pack:dry-run`, fix `package.json` metadata, `files`, or generated
   package output so consumers receive the intended files.
 
 ## Docs Build Failures
 
-There is no `docs:build` script yet. If a future docs site adds one, keep docs
-build failures tied to source-backed documentation:
+Keep docs build failures tied to source-backed documentation:
 
 - Fix broken links by pointing to canonical docs, source files, or runnable
   examples.
