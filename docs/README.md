@@ -15,7 +15,9 @@ docs will expose.
   `docs/project/socket-store-contract-map.md` for cross-package contract work.
   Use `docs/project/store-creation-path.md` for the official store creation
   decision. Use `docs/project/release-order.md` for cross-repository release
-  order and migration-note gates.
+  order and migration-note gates. Use
+  `docs/project/documentation-examples-closeout.md` for the #10 umbrella
+  documentation and runnable examples reconciliation.
 
 Root files keep their existing roles: `README.md` is the concise package
 overview, `example/` contains runnable app code, and `src/` is the source of
