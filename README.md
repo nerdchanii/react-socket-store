@@ -99,8 +99,11 @@ const socketStore = new SocketStore(new WebSocket("ws://localhost:3000"), [
 #### 2-3. Store Ownership
 
 You can pass a store directly to hooks when a component owns its realtime
-boundary. Keep WebSocket allocation out of render-phase hook initializers; pass
-a stable client-owned store into the component instead.
+boundary. Store-direct hooks are the preferred shape for focused client islands,
+data-loader patterns, and Next.js App Router code because they avoid widening a
+larger React tree into a client boundary. Keep WebSocket allocation out of
+render-phase hook initializers; pass a stable client-owned store into the
+component instead.
 
 ```tsx
 import {
@@ -119,10 +122,15 @@ function ChatClient({ store }: { store: ISocketStore<ChatSchema> }) {
 }
 ```
 
-For SPA compatibility, you can also wrap a subtree with `<SocketProvider>`.
+`SocketProvider` remains available as an optional SPA-friendly convenience when
+many descendants share the same store through context. Do not put
+`SocketProvider` at the app root when only one focused subtree needs realtime
+state, or when doing so would force a server-rendered layout, route, or
+data-loader boundary to become client-rendered. In those cases, pass the store
+directly to `useSocket`, `useListen`, or `useSend`.
 
-
-- Wrap your `<App>` with `<SocketProvider>`, and provide a previously created store as a prop for the socket provider.
+- Wrap the SPA subtree that needs socket state with `<SocketProvider>`, and
+  provide a previously created store as a prop for the socket provider.
 
 ```tsx
 import type { ReactNode } from "react";
