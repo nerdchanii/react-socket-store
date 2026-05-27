@@ -1,0 +1,131 @@
+{
+  "package": "react-socket-store",
+  "summary": "React adapter for socket-store that provides a provider and hooks for reading topic state, sending topic payloads, and cleaning up subscriptions in React components.",
+  "publicDocsUrl": "https://nerdchanii.github.io/react-socket-store/",
+  "canonicalDocs": [
+    {
+      "path": "README.md",
+      "covers": ["overview", "install", "basic provider usage", "examples", "non-goals"]
+    },
+    {
+      "path": "docs/public/guide/index.md",
+      "covers": ["provider setup", "store-direct hook guidance", "schema-safe usage"]
+    },
+    {
+      "path": "docs/public/api/index.md",
+      "covers": ["SocketProvider", "useSocket", "useListen", "useSend", "useSocketStoreRef", "cleanup behavior"]
+    },
+    {
+      "path": "docs/public/examples/index.md",
+      "covers": ["provider example", "store-direct example", "Next.js App Router example", "expected message flow"]
+    },
+    {
+      "path": "docs/public/nextjs/index.md",
+      "covers": ["Client Component boundaries", "Server Component snapshot handoff", "client-owned stores"]
+    },
+    {
+      "path": "docs/public/compatibility/index.md",
+      "covers": ["socket-store compatibility", "React support", "release order"]
+    },
+    {
+      "path": "llms.txt",
+      "covers": ["agent entrypoint", "canonical documentation index"]
+    }
+  ],
+  "publicEntryPoints": [
+    {
+      "name": "SocketProvider",
+      "source": "src/components/SocketProvider.tsx",
+      "docs": "docs/public/api/index.md"
+    },
+    {
+      "name": "useSocket",
+      "source": "src/components/hooks/useSocket.tsx",
+      "docs": "docs/public/api/index.md"
+    },
+    {
+      "name": "useListen",
+      "source": "src/components/hooks/useListen.tsx",
+      "docs": "docs/public/api/index.md"
+    },
+    {
+      "name": "useSend",
+      "source": "src/components/hooks/useSend.tsx",
+      "docs": "docs/public/api/index.md"
+    },
+    {
+      "name": "useSocketStoreRef",
+      "source": "src/components/hooks/useSocketStoreRef.ts",
+      "docs": "docs/public/api/index.md"
+    },
+    {
+      "name": "SocketStore and createMessageHandler re-exports",
+      "source": "src/index.ts",
+      "docs": "docs/public/api/index.md"
+    }
+  ],
+  "importantFiles": [
+    "src/index.ts",
+    "src/components/SocketProvider.tsx",
+    "src/components/context.ts",
+    "src/components/hooks/",
+    "src/types.ts",
+    "tests/",
+    "test-d/",
+    "example/",
+    "docs/style-guide.md",
+    "docs/project/check-failure-playbook.md"
+  ],
+  "examples": [
+    { "name": "provider-backed React app", "path": "docs/public/examples/index.md#provider-example", "source": "README.md" },
+    { "name": "store-direct hook usage", "path": "docs/public/examples/index.md#store-direct-example", "source": "docs/public/guide/index.md" },
+    { "name": "Next.js App Router client island", "path": "docs/public/examples/index.md#nextjs-app-router-example", "source": "docs/public/nextjs/index.md" },
+    { "name": "runnable Vite example", "path": "example/", "source": "example/README.md" }
+  ],
+  "clientOnlyConstraints": [
+    "Create WebSocket-backed stores and call hooks inside React Client Components.",
+    "For Next.js App Router, pass serializable snapshots across Server Component boundaries and keep live stores client-owned.",
+    "Use store-direct hooks for focused client islands, data-loader patterns, or components that already receive a store.",
+    "Do not allocate WebSockets or other external resources inside useSocketStoreRef factories."
+  ],
+  "responsibilityBoundary": {
+    "react-socket-store": [
+      "React context provider wiring",
+      "React hook APIs",
+      "useSyncExternalStore subscription adapters",
+      "React render timing and cleanup",
+      "schema-safe hook usage",
+      "React and Next.js client-boundary guidance"
+    ],
+    "socket-store": [
+      "WebSocket message routing",
+      "topic snapshots",
+      "message handlers",
+      "protocol adapters",
+      "socket lifecycle callbacks",
+      "core state and message contracts"
+    ]
+  },
+  "socketStoreReferences": [
+    { "name": "socket-store repository", "url": "https://github.com/nerdchanii/socket-store" },
+    { "name": "socket-store public docs", "url": "https://nerdchanii.github.io/socket-store/" }
+  ],
+  "nonGoals": [
+    "Core WebSocket protocol parsing",
+    "Reconnect behavior",
+    "Persistence",
+    "Server behavior",
+    "socket-store lifecycle semantics",
+    "RPC framework",
+    "CRDT or collaborative editing engine",
+    "A2A protocol implementation",
+    "MCP docs-query integration"
+  ],
+  "verificationCommands": [
+    "node -e \"JSON.parse(require('fs').readFileSync('docs/agents/agent-context.json', 'utf8'))\"",
+    "npm run lint",
+    "npm test",
+    "npm run build",
+    "npm run docs:build"
+  ]
+}
