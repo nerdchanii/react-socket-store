@@ -5,8 +5,9 @@ agent-readable files.
 
 ## Writing Rules
 
-- Document only behavior verified from source, tests, runnable examples, or an
-  accepted issue contract.
+- Document available behavior only when it is verified from source, tests, or
+  runnable examples. Use accepted issue contracts only for future or deferred
+  wording.
 - Prefer concrete React examples over placeholder prose.
 - Keep headings stable and descriptive so agents can link to them directly.
 - Use present tense for supported behavior and future tense only for explicitly
