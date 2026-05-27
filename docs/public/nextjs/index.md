@@ -4,10 +4,97 @@
 client-rendered components. In App Router projects, keep server-fetched data in
 Server Components and pass initial snapshots into focused Client Components.
 
+## Server And Client Responsibilities
+
+Server Components can fetch request-scoped data, read cookies or headers, and
+prepare serializable initial snapshots. They must not create `WebSocket`
+instances, `SocketStore` instances, React context providers, or call
+`react-socket-store` hooks.
+
+Client Components own the realtime boundary. Put `"use client"` on the file
+that creates or consumes the WebSocket store, calls `useSocket`, `useListen`,
+`useSend`, or renders `SocketProvider`. This matches the App Router client
+boundary: Client Component props must be serializable, while hooks, state,
+effects, event handlers, and browser APIs stay on the client.
+
 Prefer store-direct hooks for RSC client islands so a large layout does not need
-to become a Client Component only to host `SocketProvider`. Pass a stable
-client-owned store instance into the island; do not create user-specific stores
-as request-shared server or module singletons.
+to become a Client Component only to host `SocketProvider`. Keep providers and
+store owners close to the realtime UI; placing `SocketProvider` in a root layout
+turns that layout file and its imports into the client bundle.
+
+Do not create global user-specific stores on the server or in shared modules.
+Those stores can leak request data between users and cannot cross the RSC
+serialization boundary.
+
+## Client Island With Initial Snapshot
+
+Pass only the snapshot from the Server Component:
+
+```tsx
+// app/chat/page.tsx
+import { ChatIsland } from "./ChatIsland";
+
+export default async function Page() {
+  const initialMessages = await getInitialMessages();
+
+  return <ChatIsland initialMessages={initialMessages} />;
+}
+```
+
+Then create the WebSocket-backed store inside the client island lifecycle and
+seed the topic handler with that snapshot:
+
+```tsx
+// app/chat/ChatIsland.tsx
+"use client";
+
+import { useEffect, useState } from "react";
+import { SocketStore, createMessageHandler } from "react-socket-store";
+import { ChatClient } from "./ChatClient";
+
+type ChatSchema = {
+  talk: {
+    state: string[];
+    payload: string;
+  };
+};
+
+export function ChatIsland({ initialMessages }: { initialMessages: string[] }) {
+  const [store, setStore] = useState<SocketStore<ChatSchema> | null>(null);
+
+  useEffect(() => {
+    const socket = new WebSocket("wss://example.com/chat");
+    const nextStore = new SocketStore<ChatSchema>(socket, [
+      createMessageHandler<string[], string, "talk">(
+        "talk",
+        (state, message) => [...state, message],
+        [...initialMessages]
+      ),
+    ]);
+
+    setStore(nextStore);
+
+    return () => {
+      nextStore.dispose();
+      socket.close();
+    };
+  }, [initialMessages]);
+
+  if (store === null) {
+    return <p>{initialMessages.length}</p>;
+  }
+
+  return <ChatClient store={store} />;
+}
+```
+
+The server-owned value is the serializable `initialMessages` array. The client
+island creates one store per mounted realtime boundary, and the first
+`useSocket` read observes the handler's initial state through
+`store.getState("talk")`. `ChatClient` can then use the store-direct hooks shown
+below without widening the client boundary to a root layout.
+
+## Store-Direct Hooks
 
 ```tsx
 "use client";
