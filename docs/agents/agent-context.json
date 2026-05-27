@@ -20,6 +20,10 @@
       "covers": ["provider example", "store-direct example", "Next.js App Router example", "expected message flow"]
     },
     {
+      "path": "docs/public/agents/index.md",
+      "covers": ["agent guide", "provider versus store-direct choice", "Next.js Client Component constraints"]
+    },
+    {
       "path": "docs/public/nextjs/index.md",
       "covers": ["Client Component boundaries", "Server Component snapshot handoff", "client-owned stores"]
     },
