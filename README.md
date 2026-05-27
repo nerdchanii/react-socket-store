@@ -7,6 +7,9 @@ It is provider of [socket-store](https://github.com/nerdchanii/socket-store).
 `react-socket-store` depends on the public `socket-store` package contract. Its source imports runtime values and store contract types from the `socket-store` package root, not from generated `socket-store/dist/*` build paths.
 
 Full guides live in [docs/public](./docs/public/).
+For version pairing and upgrade guidance, see
+[Compatibility](./docs/public/compatibility/) and
+[Migration](./docs/public/migration/).
 
 ## Package Boundary and Compatibility
 
@@ -23,7 +26,8 @@ The current adapter release depends on `socket-store@^0.0.2` and intentionally
 keeps local adapter contract types until a later `socket-store` release exposes
 the stronger adapter type surface on npm. When React adapter code needs a new
 core contract, release `socket-store` first, then update and release
-`react-socket-store`. This change does not introduce a breaking migration.
+`react-socket-store`. The current stabilization docs do not introduce a
+breaking migration.
 
 ## Quick Start
 
