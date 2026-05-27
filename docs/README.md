@@ -13,6 +13,8 @@ docs will expose.
 - `docs/project/`: maintainer-facing planning notes that should not be treated
   as public package documentation. Start with
   `docs/project/socket-store-contract-map.md` for cross-package contract work.
+  Use `docs/project/store-creation-path.md` for the official store creation
+  decision.
 
 Root files keep their existing roles: `README.md` is the concise package
 overview, `example/` contains runnable app code, and `src/` is the source of
