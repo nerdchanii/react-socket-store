@@ -33,6 +33,18 @@ function DirectSocketHookExample() {
   return <p>{messages.join(", ")}</p>;
 }
 
+function DirectSplitHookExample({ store }: { store: ISocketStore<ChatSchema> }) {
+  const stableStore = useSocketStoreRef(() => store);
+  const [messages] = useListen(stableStore, "talk");
+  const [sendTalk] = useSend(stableStore, "talk");
+
+  return (
+    <button type="button" onClick={() => sendTalk("hello")}>
+      {messages.join(", ")}
+    </button>
+  );
+}
+
 function ListenHookExample() {
   const [messages] = useListen<ChatSchema, "talk">("talk");
 
@@ -61,5 +73,6 @@ useSocket(store, "missing");
 
 void SocketHookExample;
 void DirectSocketHookExample;
+void DirectSplitHookExample;
 void ListenHookExample;
 void SendHookExample;
