@@ -38,7 +38,7 @@ function createCoreFixture(initialTalkState: string[] = []) {
   const talkHandler = createMessageHandler<string[], string>(
     "talk",
     (state, message) => [...state, message],
-    [...initialTalkState]
+    initialTalkState
   );
   const tradeHandler = createMessageHandler<number, number>(
     "trade",
