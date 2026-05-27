@@ -64,3 +64,13 @@ and core error semantics. `react-socket-store` owns only the React adapter
 contract: provider wiring, hook overloads, render snapshots, subscription
 cleanup from React effects, schema-safe hook usage, and Next.js Client Component
 boundaries.
+
+## MCP Docs-Query Evaluation
+
+After the public API, docs, and examples stabilize, make a yes/no decision on
+whether an MCP docs-query integration would help agents find the canonical
+React adapter docs more reliably than `llms.txt` and the public docs index.
+
+Evaluate MCP only as a documentation query surface over existing public docs and
+agent metadata. Do not add runtime package functionality, WebSocket behavior,
+A2A protocol support, or a second API surface as part of this evaluation.
