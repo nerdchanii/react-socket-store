@@ -14,6 +14,10 @@ context, then follow the public docs that match the code you are changing.
 - The [API guide](../api/) defines the supported provider and hook signatures.
 - The [examples guide](../examples/) is the canonical examples index for
   provider, store-direct, and Next.js App Router shapes.
+- The [`socket-store` API contract](https://nerdchanii.github.io/socket-store/api)
+  owns framework-agnostic store behavior for `SocketStore`,
+  `createMessageHandler`, protocol adapters, socket lifecycle callbacks, core
+  errors, and message routing.
 
 If these references disagree, prefer shipped source, tests, and public docs over
 older planning notes.
@@ -47,5 +51,16 @@ source and tests:
 - `src/types.ts`, `tests/`, and `test-d/` for runtime and type contracts.
 - `example/` for runnable provider setup.
 
-For core WebSocket topic-store behavior, use the `socket-store` docs instead of
-adding new behavior to this adapter.
+## Cross-Package Boundary
+
+For core WebSocket topic-store behavior, use the
+[`socket-store` public docs](https://nerdchanii.github.io/socket-store/) and
+[`socket-store` API contract](https://nerdchanii.github.io/socket-store/api)
+instead of adding new behavior to this adapter.
+
+`socket-store` owns `SocketStore`, `createMessageHandler`, topic snapshots,
+message routing, protocol adapters, lifecycle callbacks, socket send failures,
+and core error semantics. `react-socket-store` owns only the React adapter
+contract: provider wiring, hook overloads, render snapshots, subscription
+cleanup from React effects, schema-safe hook usage, and Next.js Client Component
+boundaries.
