@@ -11,6 +11,12 @@ const scannedPaths = [
   "example",
   "README.md",
 ];
+const ignoredDirectories = new Set([
+  ".vitepress",
+  "dist",
+  "lib",
+  "node_modules",
+]);
 const extensions = new Set([".cjs", ".js", ".md", ".ts", ".tsx"]);
 const violations = [];
 
@@ -37,6 +43,10 @@ function walk(entryPath) {
     const fullPath = path.join(entryPath, entry.name);
 
     if (entry.isDirectory()) {
+      if (ignoredDirectories.has(entry.name)) {
+        continue;
+      }
+
       walk(fullPath);
       continue;
     }
