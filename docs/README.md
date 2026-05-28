@@ -23,6 +23,13 @@ Root files keep their existing roles: `README.md` is the concise package
 overview, `example/` contains runnable app code, and `src/` is the source of
 truth for exported React behavior.
 
+## Documentation Scripts
+
+Use the package scripts from a clean checkout after `npm install`:
+
+- `npm run docs:build` builds the VitePress public docs in `docs/public/`.
+- `npm run docs:preview` serves the built docs for manual review.
+
 ## Public Docs Versus Project Docs
 
 Public docs explain the supported React adapter contract: provider setup, hook
