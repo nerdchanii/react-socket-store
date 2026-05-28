@@ -37,3 +37,10 @@ export function ChatClient({ store }: { store: ISocketStore<ChatSchema> }) {
 resources in application lifecycle code that can clean them up, then pass the
 resulting store into the client island. `SocketProvider` remains available for
 SPA compatibility, but it is not required for client-owned store instances.
+
+Initial server-fetched snapshots should seed the per-client store before the
+store reaches `useSocketStoreRef`. Keep the snapshot serializable across the RSC
+boundary, create a new store for each client-owned realtime boundary, and avoid
+module-level stores for user-specific data. The first `useSocket` or `useListen`
+read uses the store's current `getState(topic)` snapshot, so the hook does not
+need a separate initial-state option.
