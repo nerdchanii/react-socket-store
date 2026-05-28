@@ -172,18 +172,30 @@ describe("react-socket-store hooks", () => {
 
   it("supports split hooks with an explicit store outside SocketProvider", () => {
     const store = createStore();
-    const { result } = renderHook(() => ({
+    const { result, unmount } = renderHook(() => ({
       listen: useListen<TestSchema, "trade">(store, "trade"),
       send: useSend<TestSchema, "trade">(store, "trade"),
     }));
 
     expect(result.current.listen[0]).toBe(1);
+    expect(store.listenerCount("trade")).toBe(1);
+
+    act(() => {
+      store.setState("trade", 2);
+    });
+
+    expect(result.current.listen[0]).toBe(2);
 
     act(() => {
       result.current.send[0](7);
     });
 
     expect(store.sent).toEqual([{ key: "trade", data: 7 }]);
+
+    unmount();
+
+    expect(store.listenerCount("trade")).toBe(0);
+    expect(store.unsubscriptions).toBe(1);
   });
 
   it("useSend sends the selected topic and payload", () => {
