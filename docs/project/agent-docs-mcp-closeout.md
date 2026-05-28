@@ -43,3 +43,10 @@ closeout branch.
 Issue #59 remains blocked on an owner-confirmed public docs URL/path. Treat that
 as separate public docs hosting work, not as a blocker for the #13 umbrella
 reconciliation.
+
+## Future SSOT Need
+
+If the repository later accepts a durable policy for agent-facing docs,
+cross-package agent boundaries, or MCP-as-docs-query evaluation, that accepted
+policy should move into a dedicated SPEC instead of remaining only in this
+closeout record.

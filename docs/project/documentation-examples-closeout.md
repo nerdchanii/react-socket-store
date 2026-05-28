@@ -40,3 +40,9 @@ No additional runtime behavior is required in this closeout branch.
 Issue #58 tracks public docs snippet verification. Treat that as the remaining
 hardening work for executable README and `docs/public` examples, not as a
 blocker for the #10 umbrella reconciliation.
+
+## Future SSOT Need
+
+If documentation conventions, example-shape requirements, or release-order
+dependencies become durable cross-cutting rules, move those accepted rules into
+a dedicated SPEC instead of continuing to spread them across closeout notes.
