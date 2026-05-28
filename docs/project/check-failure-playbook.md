@@ -7,8 +7,8 @@ cause over weakening a rule, skipping a test, or narrowing CI coverage.
 
 - `npm run lint`: runs public import checks, ESLint conventions, production
   typecheck, and type-level tests.
-- `npm run lint:imports`: rejects imports from generated `socket-store/dist/*`
-  paths.
+- `npm run lint:imports`: rejects imports or docs examples from generated
+  `socket-store/dist/*` paths.
 - `npm run lint:eslint`: enforces TypeScript import conventions, unused
   variable checks, and React Hooks rules for `src/` and runtime tests.
 - `npm run typecheck`: compiles package source with `tsc --noEmit`.
@@ -27,8 +27,8 @@ CI runs `npm run lint`, `npm test`, `npm run build`, `npm run docs:build`, and
 Start with the first failing command. Rerun it locally, copy the exact command,
 and fix the failing contract at its source.
 
-- For `lint:imports`, replace deep `socket-store/dist/*` imports with public
-  package-root imports.
+- For `lint:imports`, replace deep `socket-store/dist/*` imports or docs
+  examples with public package-root imports.
 - For `lint:eslint`, fix the TypeScript or React Hooks issue. Keep hook
   dependency arrays accurate; do not silence `react-hooks/exhaustive-deps`
   unless the code is restructured and the reason is documented in code.
