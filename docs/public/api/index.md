@@ -156,6 +156,10 @@ only with a precreated store reference or another pure factory. Do not open a
 `WebSocket` or allocate external resources inside this factory because React can
 discard render attempts before commit.
 
+For Next.js App Router, keep user-specific stores client-owned and pass only
+serializable server snapshots across the RSC boundary. See the
+[Next.js guide](../nextjs/#server-and-client-responsibilities).
+
 ```tsx
 function ChatClient({ store }: { store: ISocketStore<ChatSchema> }) {
   const stableStore = useSocketStoreRef(() => store);

@@ -24,7 +24,9 @@ turns that layout file and its imports into the client bundle.
 
 Do not create global user-specific stores on the server or in shared modules.
 Those stores can leak request data between users and cannot cross the RSC
-serialization boundary.
+serialization boundary. Next.js request memoization and opt-in data caching are
+for application data fetching, not for sharing a mutable `SocketStore` that
+contains user-specific realtime state.
 
 ## Client Island With Initial Snapshot
 
@@ -131,3 +133,5 @@ boundary, create a new store for each client-owned realtime boundary, and avoid
 module-level stores for user-specific data. The first `useSocket` or `useListen`
 read uses the store's current `getState(topic)` snapshot, so the hook does not
 need a separate initial-state option.
+
+For the store-direct hook signatures, see the [API guide](../api/#hook-api).
