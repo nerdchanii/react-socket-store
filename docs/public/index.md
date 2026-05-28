@@ -4,8 +4,7 @@
 package. It provides a provider and hooks for reading topic state, sending
 topic payloads, and cleaning up subscriptions with React components.
 
-Use these docs for user-facing React integration guidance. Maintainer notes and
-check failure playbooks stay outside this public source directory.
+Use these docs for user-facing React integration guidance.
 
 ## Sections
 
