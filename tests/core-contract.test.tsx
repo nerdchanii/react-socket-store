@@ -115,4 +115,41 @@ describe("socket-store public contract fixture", () => {
       { key: "talk", data: "from hook" },
     ]);
   });
+
+  it("cleans up safely when the public core subscribe API has no unsubscribe", () => {
+    const { store } = createCoreFixture();
+    const { unmount } = renderHook(
+      () => useListen<CoreSchema, "talk">("talk"),
+      {
+        wrapper: createWrapper(store),
+      }
+    );
+
+    unmount();
+
+    expect(() => {
+      store.onMessage(
+        new MessageEvent("message", {
+          data: JSON.stringify({ key: "talk", data: "after unmount" }),
+        })
+      );
+    }).not.toThrow();
+  });
+
+  it("surfaces unknown topic keys from the public core store", () => {
+    const { store } = createCoreFixture();
+    renderHook(() => useListen<CoreSchema, "talk">("talk"), {
+      wrapper: createWrapper(store),
+    });
+
+    expect(() => {
+      store.onMessage(
+        new MessageEvent("message", {
+          data: JSON.stringify({ key: "missing", data: "ignored" }),
+        })
+      );
+    }).toThrow();
+
+    expect(store.getState("talk")).toEqual([]);
+  });
 });
