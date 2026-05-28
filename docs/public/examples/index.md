@@ -1,18 +1,16 @@
 # Examples
 
-Use this page as the canonical index for supported example shapes. Keep written
-examples short and directly adaptable from runnable source instead of copying
-large files into the docs.
+Choose the example that matches how your app owns the realtime store.
 
-## Canonical Examples Index
+## Local Vite App
 
-| Example | Purpose | Setup | Expected message flow | Cleanup | Copy-paste safety |
-| --- | --- | --- | --- | --- | --- |
-| [Local Vite provider example](#local-vite-provider-example) | Run a browser app that shares one store through `SocketProvider`. | From `example/`, run `npm install`, `npm run server`, and `npm run dev` in separate terminals. | The form sends `{ "key": "talk", "data": "<message>" }` to `ws://localhost:3000`; the local server echoes valid topic messages; the `talk` handler appends payloads to chat state. | Close the browser tab to close the client socket. Stop the server with `Ctrl+C` to close connected clients. | Safe for sample apps and manual demos. For tests, copy the provider and hook shape, not the browser-only module-level `WebSocket` setup. |
-| [React Router loader initial snapshot](#react-router-loader-initial-snapshot) | Seed a client-owned store from route loader data without adding a provider boundary. | Adapt into a React Router route with a loader that returns serializable initial messages. | The loader returns a snapshot; the client route creates the store after mount; `useSocket(store, "talk")` reads the seeded state and receives realtime updates. | The route cleanup closes the route-owned socket. Hook subscriptions clean up when the store provides unsubscribe callbacks. | Safe for tests or sample apps that pass an explicit store into components. Replace `wss://example.com/chat` with test or app infrastructure. |
-| [Next.js App Router client island](#next-js-app-router-client-island) | Keep request data on the server and realtime store ownership inside a focused Client Component. | Adapt into App Router with a Server Component page and a `"use client"` island. | The server passes a serializable snapshot; the island creates one store per mounted boundary; `useSocket(store, "talk")` reads and sends through that store. | The island effect cleanup calls `socket.close()`. Hook subscriptions clean up on unmount or store/topic changes. | Safe for App Router sample apps and client-island tests. Do not copy it into a Server Component or shared module singleton. |
+Use this example when you want the smallest runnable browser app with
+`SocketProvider` and a local WebSocket server.
 
-## Local Vite Provider Example
+Key idea:
+
+- one browser app owns one store and shares it through `SocketProvider`
+- a local server echoes topic messages so you can test the full flow quickly
 
 The Vite example includes a minimal local WebSocket echo server, so it does not
 need external infrastructure. From `example/`, install dependencies, then run
@@ -54,9 +52,16 @@ export function TalkBox() {
 }
 ```
 
-Use `npm run docs:build` to verify the public docs site.
-
 ## React Router Loader Initial Snapshot
+
+Use this example when route loader data should seed the first render, but the
+browser route still owns the realtime socket after mount.
+
+Key idea:
+
+- the loader returns only serializable snapshot data
+- the client route creates the store and passes it directly to store-direct
+  hooks
 
 React Router data loaders can fetch the request-scoped initial snapshot before
 the route renders. Pass that serializable data into a client-owned realtime
@@ -201,6 +206,14 @@ For equivalent server/client placement in App Router, see the
 [Next.js guide](../nextjs/).
 
 ## Next.js App Router Client Island
+
+Use this example when a Server Component should fetch request data and a
+focused Client Component island should own the realtime connection.
+
+Key idea:
+
+- the server passes a serializable snapshot across the RSC boundary
+- the client island creates and cleans up the `WebSocket` and `SocketStore`
 
 In App Router, keep request-scoped data fetching in the Server Component and
 create the realtime store inside a focused Client Component island.
