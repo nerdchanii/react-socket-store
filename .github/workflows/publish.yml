@@ -1,0 +1,67 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm-publish
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Use trusted publishing-capable npm
+        run: npm install -g npm@^11.5.1
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Runtime tests
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+      - name: Build docs
+        run: npm run docs:build
+
+      - name: Verify package contents
+        run: npm run pack:dry-run
+
+      - name: Publish to npm
+        run: |
+          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
+          if npm view "react-socket-store@${PACKAGE_VERSION}" version >/dev/null 2>&1; then
+            echo "react-socket-store@${PACKAGE_VERSION} is already published"
+          else
+            npm publish --provenance
+          fi
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
+          TAG="v${PACKAGE_VERSION}"
+          if ! git ls-remote --tags origin "refs/tags/${TAG}" | grep -q "${TAG}"; then
+            git tag "${TAG}"
+            git push origin "${TAG}"
+          fi
+          gh release view "${TAG}" >/dev/null 2>&1 || gh release create "${TAG}" --title "${TAG}" --notes "Release react-socket-store ${TAG}."

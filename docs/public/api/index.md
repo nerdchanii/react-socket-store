@@ -180,9 +180,8 @@ function ChatClient({ store }: { store: ISocketStore<ChatSchema> }) {
   provider store is available.
 - `useListen` and `useSocket` clean up by calling the unsubscribe function
   returned by `store.subscribe` when one is provided.
-- The currently published `socket-store@0.0.2` subscribe declaration returns
-  `void`, so stronger cleanup guarantees depend on the cross-package contract
-  work tracked in project docs and tests.
+- The current `socket-store@0.0.3` package includes the public subscribe
+  cleanup contract used by the adapter.
 - Unknown topic runtime behavior is not guaranteed. Use a schema type when you
   want TypeScript to constrain topic names and payloads.
 
