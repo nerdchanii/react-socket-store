@@ -21,7 +21,7 @@
     },
     {
       "path": "docs/public/agents/index.md",
-      "covers": ["agent guide", "provider versus store-direct choice", "Next.js Client Component constraints", "socket-store contract links"]
+      "covers": ["agent guide", "provider versus store-direct choice", "Next.js Client Component constraints", "socket-store contract links", "MCP docs-query evaluation"]
     },
     {
       "path": "docs/public/nextjs/index.md",
@@ -116,6 +116,16 @@
     { "name": "socket-store API contract", "url": "https://nerdchanii.github.io/socket-store/api" },
     { "name": "socket-store agent-readable docs", "url": "https://nerdchanii.github.io/socket-store/agents" }
   ],
+  "mcpDocsQueryEvaluation": {
+    "decisionPoint": "After the public API, docs, and examples stabilize, decide yes or no on whether an MCP docs-query integration improves canonical documentation lookup for agents.",
+    "definition": "MCP is documentation/query integration only over existing public docs and agent metadata.",
+    "excludedScope": [
+      "Runtime package functionality",
+      "WebSocket behavior",
+      "A2A protocol support",
+      "Second public API surface"
+    ]
+  },
   "nonGoals": [
     "Core WebSocket protocol parsing",
     "Reconnect behavior",
@@ -125,7 +135,7 @@
     "RPC framework",
     "CRDT or collaborative editing engine",
     "A2A protocol implementation",
-    "MCP docs-query integration"
+    "MCP runtime package functionality"
   ],
   "verificationCommands": [
     "node -e \"JSON.parse(require('fs').readFileSync('docs/agents/agent-context.json', 'utf8'))\"",
