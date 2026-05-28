@@ -29,6 +29,8 @@ Use the package scripts from a clean checkout after `npm install`:
 
 - `npm run docs:build` builds the VitePress public docs in `docs/public/`.
 - `npm run docs:preview` serves the built docs for manual review.
+- `npm run docs:snippets` extracts TypeScript and TSX fences from `README.md`
+  and `docs/public/`, then compiles them against the current package exports.
 
 ## Public Docs Versus Project Docs
 
@@ -41,3 +43,13 @@ context. Do not present project notes as package guarantees.
 
 Agent-facing docs should point to public docs, source files, examples, and
 metadata without duplicating complete API references.
+
+## Verified Snippets
+
+Public TypeScript and TSX snippets are checked in two layers:
+
+- `test-d/*.test-d.tsx` keeps curated mirrors for README, hook, and example
+  contracts that need type assertions or expected errors.
+- `npm run docs:snippets` extracts every public `ts`, `tsx`, and `typescript`
+  code fence from `README.md` and `docs/public/` so CI fails when docs reference
+  missing exports, invalid hook signatures, or unsupported package imports.

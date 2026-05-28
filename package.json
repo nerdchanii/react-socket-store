@@ -37,9 +37,10 @@
     "docs:dev": "vitepress dev docs/public",
     "docs:build": "vitepress build docs/public",
     "docs:preview": "vitepress preview docs/public",
+    "docs:snippets": "node scripts/check-public-doc-snippets.cjs",
     "lint:eslint": "eslint --max-warnings=0 \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\"",
     "lint:imports": "node scripts/check-public-imports.cjs",
-    "lint": "npm run lint:imports && npm run lint:eslint && npm run typecheck && npm run type-test",
+    "lint": "npm run lint:imports && npm run lint:eslint && npm run typecheck && npm run type-test && npm run docs:snippets",
     "pack:dry-run": "npm pack --dry-run",
     "prepack": "npm run lint && npm run test && npm run build"
   },
