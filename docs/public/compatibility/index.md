@@ -21,20 +21,18 @@ share a protocol, but they do not own the same behavior.
 - schema-safe hook state and payload types
 - React subscription setup and cleanup through `useSyncExternalStore`
 
-For the framework-agnostic store contract, use the
-[`socket-store` README](https://github.com/nerdchanii/socket-store#readme) and
-[`socket-store` API contract](https://github.com/nerdchanii/socket-store/blob/main/docs/guide/api.md)
-instead of treating this React adapter page as the source of truth. This page
-only documents which core package version the adapter is expected to consume
-and which behavior remains adapter-owned.
+For the framework-agnostic store behavior, use the
+[`socket-store` docs](https://nerdchanii.github.io/socket-store/). This page
+only documents supported package pairings and which behavior remains
+adapter-owned.
 
 ## Compatibility Table
 
 | react-socket-store | socket-store | Status | Notes |
 | --- | --- | --- | --- |
-| `0.0.5` | `^0.0.3` | Supported current pairing | The adapter imports only from public package roots and consumes the released core package boundary. |
-| `0.0.4` | `^0.0.2` | Previous pairing | Supported for existing consumers that have not upgraded to the latest core package. |
-| Future adapter release requiring new core behavior or public core types | Future npm `socket-store` release that contains that contract | Not supported until both packages are released | Do not publish or document a new adapter pairing until the required core version is available from npm and the migration notes name the minimum version. |
+| `0.0.5` | `^0.0.3` | Supported current pairing | Current documented pairing. |
+| `0.0.4` | `^0.0.2` | Older pairing | Upgrade when you want the latest public docs and compatibility guidance. |
+| Future adapter release requiring new core behavior or public core types | Matching future `socket-store` npm release | Not supported yet | Wait for a documented pairing before upgrading both packages together. |
 
 Do not import from generated `socket-store/dist/*` paths. Use package root
 exports only.
@@ -42,23 +40,3 @@ exports only.
 The table only lists supported npm pairings and explicit unreleased boundaries.
 It does not make local `socket-store` main-branch behavior available to
 published `react-socket-store` consumers.
-
-## Release Order
-
-Release `socket-store` first when adapter work depends on new core behavior, new
-public core types, or a higher minimum core version. After the core package is
-available on npm, update `react-socket-store` to consume that public contract
-through package-root exports and release the adapter.
-
-Adapter-only docs, examples, hook tests, and React cleanup fixes can release
-without a core release when they do not require a new core contract.
-
-No breaking migration is required for the current compatibility boundary. The
-current stabilization docs preserve the package-root import boundary while
-updating the pairing to `react-socket-store@0.0.5` and `socket-store@^0.0.3`.
-
-If a future adapter release requires a newer core contract, document the
-minimum `socket-store` version, dependency range change, import changes, and
-React-visible hook or provider changes before publishing.
-
-Maintainer release gates are intentionally kept outside the published docs.

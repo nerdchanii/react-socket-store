@@ -1,7 +1,14 @@
 # Migration
 
-No breaking migration is required for the current stabilization docs. Existing
-consumers on `react-socket-store@0.0.4` should keep using `socket-store@^0.0.2`.
+No breaking migration is required for the current documented pairing.
+
+If you are upgrading to the latest public docs baseline, use:
+
+- `react-socket-store@0.0.5`
+- `socket-store@^0.0.3`
+
+Existing consumers on `react-socket-store@0.0.4` can stay on
+`socket-store@^0.0.2` until they are ready to move both packages together.
 
 Use public package entrypoints when moving code onto the stabilized adapter:
 
@@ -20,12 +27,7 @@ Keep React adapter docs focused on provider setup, hook behavior, render timing,
 subscription cleanup, and schema-safe hook usage. Link to `socket-store` for
 core WebSocket topic-store behavior.
 
-Before publishing an adapter release that raises the required `socket-store`
-contract, add migration notes that name the minimum compatible `socket-store`
-version, dependency range changes, import changes, React hook or provider
-behavior changes, and any removed or deferred support.
-
-## Current Stabilization Notes
+## Current Notes
 
 The current docs clarify existing package boundaries rather than changing the
 runtime contract:
@@ -36,13 +38,9 @@ runtime contract:
 - `react-socket-store` remains responsible for React context wiring,
   store-direct hooks, schema-safe hook types, and subscription cleanup through
   `useSyncExternalStore`.
-- The adapter still depends on `socket-store@^0.0.2`.
+- The latest adapter pairing uses `socket-store@^0.0.3`.
 - Local adapter contract types remain in `react-socket-store` until a future
   `socket-store` npm release exposes the stronger adapter-facing type surface.
 
-When a future release raises the minimum `socket-store` version, update this
-page before publishing with the exact npm version, dependency range, and any
-consumer code changes.
-
 See [Compatibility](../compatibility/) for the package responsibility split,
-current version pairing, and cross-package release order.
+current version pairing, and supported package combinations.
