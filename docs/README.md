@@ -1,8 +1,9 @@
 # Documentation Structure
 
-This directory is the source of truth for future `react-socket-store`
-documentation. Keep pages in the same structure the public docs site or package
-docs will expose.
+This directory is the source of truth for the `react-socket-store`
+documentation site published at
+<https://nerdchanii.github.io/react-socket-store/>. Keep pages in the same
+structure the public docs site exposes.
 
 ## Intended Layout
 
@@ -43,6 +44,24 @@ context. Do not present project notes as package guarantees.
 
 Agent-facing docs should point to public docs, source files, examples, and
 metadata without duplicating complete API references.
+
+## Deployment
+
+GitHub Pages deploys the VitePress output from `docs/public/` to the
+`/react-socket-store/` project-site base path. The deploy workflow builds with
+`npm run docs:build`, uploads only `docs/public/.vitepress/dist`, and publishes
+that artifact to <https://nerdchanii.github.io/react-socket-store/>.
+
+Maintainer notes in `docs/project/` and local planning notes are outside the
+VitePress source tree and are not deployed. If Pages is not enabled for the
+repository yet, an owner must configure Pages to use GitHub Actions as the
+source before the workflow can publish.
+
+To roll back a bad docs deployment, revert the commit that changed the public
+docs or workflow and let the `Pages` workflow deploy the reverted artifact. If
+the workflow itself is failing, disable Pages publication in repository settings
+or temporarily disable the `Pages` workflow, then re-enable it after the fix
+lands.
 
 ## Verified Snippets
 

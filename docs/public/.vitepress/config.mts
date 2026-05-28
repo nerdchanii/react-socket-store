@@ -3,6 +3,7 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
   title: "react-socket-store",
   description: "React provider and hooks for socket-store.",
+  base: "/react-socket-store/",
   cleanUrls: true,
   themeConfig: {
     nav: [
