@@ -1,10 +1,18 @@
 # Examples
 
-The runnable example app lives in `example/`. Keep written examples short and
-directly adaptable from runnable source instead of copying large files into the
-docs.
+Use this page as the canonical index for supported example shapes. Keep written
+examples short and directly adaptable from runnable source instead of copying
+large files into the docs.
 
-## Local Vite Example
+## Canonical Examples Index
+
+| Example | Purpose | Setup | Expected message flow | Cleanup | Copy-paste safety |
+| --- | --- | --- | --- | --- | --- |
+| [Local Vite provider example](#local-vite-provider-example) | Run a browser app that shares one store through `SocketProvider`. | From `example/`, run `npm install`, `npm run server`, and `npm run dev` in separate terminals. | The form sends `{ "key": "talk", "data": "<message>" }` to `ws://localhost:3000`; the local server echoes valid topic messages; the `talk` handler appends payloads to chat state. | Close the browser tab to close the client socket. Stop the server with `Ctrl+C` to close connected clients. | Safe for sample apps and manual demos. For tests, copy the provider and hook shape, not the browser-only module-level `WebSocket` setup. |
+| [React Router loader initial snapshot](#react-router-loader-initial-snapshot) | Seed a client-owned store from route loader data without adding a provider boundary. | Adapt into a React Router route with a loader that returns serializable initial messages. | The loader returns a snapshot; the client route creates the store after mount; `useSocket(store, "talk")` reads the seeded state and receives realtime updates. | The route cleanup closes the route-owned socket. Hook subscriptions clean up when the store provides unsubscribe callbacks. | Safe for tests or sample apps that pass an explicit store into components. Replace `wss://example.com/chat` with test or app infrastructure. |
+| [Next.js App Router client island](#next-js-app-router-client-island) | Keep request data on the server and realtime store ownership inside a focused Client Component. | Adapt into App Router with a Server Component page and a `"use client"` island. | The server passes a serializable snapshot; the island creates one store per mounted boundary; `useSocket(store, "talk")` reads and sends through that store. | The island effect cleanup calls `nextStore.dispose()` and `socket.close()`. Hook subscriptions clean up on unmount or store/topic changes. | Safe for App Router sample apps and client-island tests. Do not copy it into a Server Component or shared module singleton. |
+
+## Local Vite Provider Example
 
 The Vite example includes a minimal local WebSocket echo server, so it does not
 need external infrastructure. From `example/`, install dependencies, then run
