@@ -18,7 +18,9 @@ React provider, hook, type, documentation, and package-boundary work.
 
 ## Documentation Scope
 
-- Current public docs live in `README.md` and `docs/public/`.
+- Current public docs live at
+  `https://nerdchanii.github.io/react-socket-store/`; source lives in
+  `README.md` and `docs/public/`.
 - `docs/README.md` describes the documentation layout.
 - Agent-readable package context belongs in `docs/agents/` when the issue scope
   calls for that content.

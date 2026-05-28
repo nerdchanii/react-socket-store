@@ -60,4 +60,4 @@ If a future adapter release requires a newer core contract, document the
 minimum `socket-store` version, dependency range change, import changes, and
 React-visible hook or provider changes before publishing.
 
-Maintainer release gates live in `docs/project/release-order.md`.
+Maintainer release gates are intentionally kept outside the published docs.

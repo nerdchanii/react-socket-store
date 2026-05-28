@@ -77,7 +77,7 @@
   "bugs": {
     "url": "https://github.com/nerdchanii/react-socket-store/issues"
   },
-  "homepage": "https://github.com/nerdchanii/react-socket-store",
+  "homepage": "https://nerdchanii.github.io/react-socket-store/",
   "dependencies": {
     "socket-store": "^0.0.2"
   }

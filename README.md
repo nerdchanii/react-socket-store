@@ -6,10 +6,11 @@ It is provider of [socket-store](https://github.com/nerdchanii/socket-store).
 
 `react-socket-store` depends on the public `socket-store` package contract. Its source imports runtime values and store contract types from the `socket-store` package root, not from generated `socket-store/dist/*` build paths.
 
-Full guides live in [docs/public](./docs/public/).
+Full guides are published at
+[nerdchanii.github.io/react-socket-store](https://nerdchanii.github.io/react-socket-store/).
 For version pairing and upgrade guidance, see
-[Compatibility](./docs/public/compatibility/) and
-[Migration](./docs/public/migration/).
+[Compatibility](https://nerdchanii.github.io/react-socket-store/compatibility/) and
+[Migration](https://nerdchanii.github.io/react-socket-store/migration/).
 
 ## Package Boundary and Compatibility
 
