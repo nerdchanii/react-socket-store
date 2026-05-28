@@ -1,8 +1,9 @@
 # Guide
 
-Create a `socket-store` store first with the public `SocketStore` constructor,
-then pass it to `SocketProvider` near the root of the React tree that needs
-socket state.
+Create a `socket-store` store first with the public `SocketStore` constructor.
+After that, choose either `SocketProvider` for an SPA subtree that should read
+one shared store from context, or store-direct hooks for components that already
+own or receive the store.
 
 ```tsx
 import {
@@ -22,15 +23,22 @@ const store = new SocketStore(new WebSocket("ws://localhost:3000"), [
 ]);
 ```
 
+## Provider Usage
+
+`SocketProvider` is an optional SPA-friendly convenience. Use it when many
+descendants in one client-rendered subtree should share the same store through
+context.
+
 ```tsx
 import { SocketProvider } from "react-socket-store";
 
-export function AppRoot({ store, children }) {
+export function RealtimeSubtree({ store, children }) {
   return <SocketProvider store={store}>{children}</SocketProvider>;
 }
 ```
 
-Inside the provider, use the hooks for topic-specific state and sends:
+Inside the provider, use the one-argument hooks for topic-specific state and
+sends:
 
 - `useSocket(topic)` returns topic state and a send function.
 - `useListen(topic)` returns topic state only.
@@ -39,12 +47,19 @@ Inside the provider, use the hooks for topic-specific state and sends:
 Provide a schema type when you want TypeScript to connect topic names to state
 and payload types.
 
+Do not put `SocketProvider` at the app root just to make a small widget work.
+If only one focused subtree needs realtime state, pass the store directly to
+that subtree instead. In Next.js App Router, avoid putting `SocketProvider` in a
+root layout when that would turn the layout and its imports into a Client
+Component; see the [Next.js guide](../nextjs/) for client-boundary placement.
+
 ## Store-Direct Usage
 
 Use store-direct hooks when a component already owns or receives a store
 instance and adding `SocketProvider` would widen the React client boundary. This
-is useful for focused client islands, tests, embedded widgets, or code that
-must keep the realtime store close to one mounted subtree.
+is the preferred shape for focused client islands, tests, embedded widgets,
+data-loader patterns, or code that must keep the realtime store close to one
+mounted subtree.
 
 ```tsx
 import {
@@ -97,10 +112,10 @@ lifetime.
 `useListen` and `useSocket` unsubscribe from the selected topic when the
 component unmounts or when the explicit store or topic changes.
 
-Use `SocketProvider` when many descendants should share the same store through
-context. Use store-direct hooks when the store is already a prop or when a
-small realtime island should not force an ancestor to become a provider. For
-App Router placement and serializable server snapshots, see the
+Use `SocketProvider` when many SPA descendants should share the same store
+through context. Use store-direct hooks when the store is already a prop or
+when a small realtime island should not force an ancestor to become a provider.
+For App Router placement and serializable server snapshots, see the
 [Next.js guide](../nextjs/).
 
 Do not use `createSocketStore` in new docs or examples; it is not exported by
