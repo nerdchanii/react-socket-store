@@ -33,12 +33,12 @@ class TestWebSocket {
   }
 }
 
-function createCoreFixture() {
+function createCoreFixture(initialTalkState: string[] = []) {
   const socket = new TestWebSocket();
   const talkHandler = createMessageHandler<string[], string>(
     "talk",
     (state, message) => [...state, message],
-    []
+    initialTalkState
   );
   const tradeHandler = createMessageHandler<number, number>(
     "trade",
@@ -82,6 +82,27 @@ describe("socket-store public contract fixture", () => {
     });
 
     expect(result.current[0]).toEqual(["hello"]);
+  });
+
+  it("reads a server snapshot before applying client realtime updates", () => {
+    const serverSnapshot = ["server:ready"];
+    const { store } = createCoreFixture(serverSnapshot);
+    const { result } = renderHook(() =>
+      useListen<CoreSchema, "talk">(store, "talk")
+    );
+
+    expect(result.current[0]).toEqual(["server:ready"]);
+
+    act(() => {
+      store.onMessage(
+        new MessageEvent("message", {
+          data: JSON.stringify({ key: "talk", data: "client:update" }),
+        })
+      );
+    });
+
+    expect(result.current[0]).toEqual(["server:ready", "client:update"]);
+    expect(serverSnapshot).toEqual(["server:ready"]);
   });
 
   it("sends topic payloads through the public core send shape", () => {
