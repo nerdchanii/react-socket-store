@@ -21,6 +21,13 @@ share a protocol, but they do not own the same behavior.
 - schema-safe hook state and payload types
 - React subscription setup and cleanup through `useSyncExternalStore`
 
+For the framework-agnostic store contract, use the
+[`socket-store` README](https://github.com/nerdchanii/socket-store#readme) and
+[`socket-store` API contract](https://github.com/nerdchanii/socket-store/blob/main/docs/guide/api.md)
+instead of treating this React adapter page as the source of truth. This page
+only documents which core package version the adapter is expected to consume
+and which behavior remains adapter-owned.
+
 ## Compatibility Table
 
 | react-socket-store | socket-store | Status | Notes |
