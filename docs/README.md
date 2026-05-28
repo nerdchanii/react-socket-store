@@ -13,14 +13,11 @@ structure the public docs site exposes.
   metadata.
 - `docs/project/`: maintainer-facing planning notes that should not be treated
   as public package documentation. Start with
-  `docs/project/socket-store-contract-map.md` for cross-package contract work.
-  Use `docs/project/store-creation-path.md` for the official store creation
-  decision. Use `docs/project/release-order.md` for cross-repository release
-  order and migration-note gates. Use
-  `docs/project/documentation-examples-closeout.md` for the #10 umbrella
-  documentation and runnable examples reconciliation. Use
-  `docs/project/agent-docs-mcp-closeout.md` for the #13 umbrella
-  agent-readable docs and MCP evaluation reconciliation.
+  [`docs/project/README.md`](./project/README.md) for the internal-docs index,
+  then use `docs/project/socket-store-contract-map.md` for cross-package
+  contract work, `docs/project/store-creation-path.md` for the official store
+  creation decision, and `docs/project/release-order.md` for cross-repository
+  release order.
 
 Root files keep their existing roles: `README.md` is the concise package
 overview, `example/` contains runnable app code, and `src/` is the source of
@@ -58,6 +55,11 @@ Maintainer notes in `docs/project/` and local planning notes are outside the
 VitePress source tree and are not deployed. If Pages is not enabled for the
 repository yet, an owner must configure Pages to use GitHub Actions as the
 source before the workflow can publish.
+
+Use [`docs/project/README.md`](./project/README.md) as the entry point for
+internal repository notes. If an accepted process or architecture rule needs a
+single long-lived source of truth, record that need there and promote the rule
+into a dedicated SPEC instead of repeating it across closeout notes.
 
 To roll back a bad docs deployment, revert the commit that changed the public
 docs or workflow and let the `Pages` workflow deploy the reverted artifact. If
