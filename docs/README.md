@@ -18,7 +18,9 @@ structure the public docs site exposes.
   decision. Use `docs/project/release-order.md` for cross-repository release
   order and migration-note gates. Use
   `docs/project/documentation-examples-closeout.md` for the #10 umbrella
-  documentation and runnable examples reconciliation.
+  documentation and runnable examples reconciliation. Use
+  `docs/project/agent-docs-mcp-closeout.md` for the #13 umbrella
+  agent-readable docs and MCP evaluation reconciliation.
 
 Root files keep their existing roles: `README.md` is the concise package
 overview, `example/` contains runnable app code, and `src/` is the source of
