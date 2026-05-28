@@ -21,7 +21,7 @@
     },
     {
       "path": "docs/public/agents/index.md",
-      "covers": ["agent guide", "provider versus store-direct choice", "Next.js Client Component constraints"]
+      "covers": ["agent guide", "provider versus store-direct choice", "Next.js Client Component constraints", "socket-store contract links"]
     },
     {
       "path": "docs/public/nextjs/index.md",
@@ -112,7 +112,9 @@
   },
   "socketStoreReferences": [
     { "name": "socket-store repository", "url": "https://github.com/nerdchanii/socket-store" },
-    { "name": "socket-store public docs", "url": "https://nerdchanii.github.io/socket-store/" }
+    { "name": "socket-store public docs", "url": "https://nerdchanii.github.io/socket-store/" },
+    { "name": "socket-store API contract", "url": "https://nerdchanii.github.io/socket-store/api" },
+    { "name": "socket-store agent-readable docs", "url": "https://nerdchanii.github.io/socket-store/agents" }
   ],
   "nonGoals": [
     "Core WebSocket protocol parsing",
