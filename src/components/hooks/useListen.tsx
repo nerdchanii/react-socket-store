@@ -2,10 +2,11 @@ import { useCallback, useSyncExternalStore } from "react";
 import type {
   DefaultSchema,
   SocketSchema,
+  SocketStoreLike,
   TopicKey,
   TopicState,
 } from "../../types";
-import { useSocketStore } from "../context";
+import { useProvidedOrContextStore } from "../context";
 
 export type UseListenResult<
   Schema extends SocketSchema,
@@ -15,17 +16,38 @@ export type UseListenResult<
 export function useListen<
   Schema extends SocketSchema = DefaultSchema,
   K extends TopicKey<Schema> = TopicKey<Schema>
->(key: K): UseListenResult<Schema, K> {
-  const store = useSocketStore<Schema>();
+>(key: K): UseListenResult<Schema, K>;
+export function useListen<
+  Schema extends SocketSchema,
+  K extends TopicKey<Schema>
+>(store: SocketStoreLike<Schema>, key: K): UseListenResult<Schema, K>;
+
+export function useListen<
+  Schema extends SocketSchema = DefaultSchema,
+  K extends TopicKey<Schema> = TopicKey<Schema>
+>(
+  storeOrKey: SocketStoreLike<Schema> | K,
+  maybeKey?: K
+): UseListenResult<Schema, K> {
+  const hasExplicitStore = maybeKey !== undefined;
+  const store = hasExplicitStore
+    ? (storeOrKey as SocketStoreLike<Schema>)
+    : undefined;
+  const key = hasExplicitStore ? maybeKey : (storeOrKey as K);
+
+  const resolvedStore = useProvidedOrContextStore<Schema>(store);
   const subscribe = useCallback(
     (onStoreChange: () => void) => {
-      const unsubscribe = store.subscribe(key, onStoreChange);
+      const unsubscribe = resolvedStore.subscribe(key, onStoreChange);
 
       return typeof unsubscribe === "function" ? unsubscribe : () => undefined;
     },
-    [store, key]
+    [resolvedStore, key]
   );
-  const getSnapshot = useCallback(() => store.getState(key), [store, key]);
+  const getSnapshot = useCallback(
+    () => resolvedStore.getState(key),
+    [resolvedStore, key]
+  );
   const state = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 
   return [state];

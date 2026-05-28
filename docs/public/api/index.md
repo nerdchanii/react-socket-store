@@ -6,6 +6,7 @@ The public package entrypoint exports React integration helpers:
 - `useSocket`
 - `useListen`
 - `useSend`
+- `useSocketStoreRef`
 - `SocketStore`
 - `createMessageHandler`
 
@@ -35,7 +36,12 @@ in new examples.
 Import hooks from the package root:
 
 ```ts
-import { useListen, useSend, useSocket } from "react-socket-store";
+import {
+  useListen,
+  useSend,
+  useSocket,
+  useSocketStoreRef,
+} from "react-socket-store";
 ```
 
 ### useSocket
@@ -49,10 +55,17 @@ function useSocket<
 >(
   key: K
 ): [TopicState<Schema, K>, (message: TopicPayload<Schema, K>) => void];
+
+function useSocket<Schema extends SocketSchema, K extends TopicKey<Schema>>(
+  store: SocketStoreLike<Schema>,
+  key: K
+): [TopicState<Schema, K>, (message: TopicPayload<Schema, K>) => void];
 ```
 
 `useSocket(topic)` subscribes to one topic and returns the current topic state
-plus a send function for the same topic.
+plus a send function for the same topic. `useSocket(store, topic)` does the
+same work against an explicit store instance and does not require
+`SocketProvider`.
 
 ```tsx
 type ChatSchema = {
@@ -67,8 +80,8 @@ const [messages, sendTalk] = useSocket<ChatSchema, "talk">("talk");
 sendTalk("hello");
 ```
 
-The hook reads the store from `SocketProvider`. It resubscribes when the topic
-key or provider store changes.
+The one-argument form reads the store from `SocketProvider`. Both forms
+resubscribe when the topic key or store changes.
 
 ### useListen
 
@@ -79,9 +92,15 @@ function useListen<
   Schema extends SocketSchema = DefaultSchema,
   K extends TopicKey<Schema> = TopicKey<Schema>
 >(key: K): [TopicState<Schema, K>];
+
+function useListen<Schema extends SocketSchema, K extends TopicKey<Schema>>(
+  store: SocketStoreLike<Schema>,
+  key: K
+): [TopicState<Schema, K>];
 ```
 
 `useListen(topic)` subscribes to one topic and returns only the current state.
+`useListen(store, topic)` uses an explicit store without provider context.
 
 ```tsx
 const [messages] = useListen<ChatSchema, "talk">("talk");
@@ -101,9 +120,16 @@ function useSend<
 >(
   key: K
 ): [(message: TopicPayload<Schema, K>) => void];
+
+function useSend<Schema extends SocketSchema, K extends TopicKey<Schema>>(
+  store: SocketStoreLike<Schema>,
+  key: K
+): [(message: TopicPayload<Schema, K>) => void];
 ```
 
 `useSend(topic)` returns only a send function for the selected topic.
+`useSend(store, topic)` sends through an explicit store without provider
+context.
 
 ```tsx
 const [sendTalk] = useSend<ChatSchema, "talk">("talk");
@@ -113,12 +139,41 @@ sendTalk("hello");
 
 The send function calls `store.send({ key, data })` with the selected topic.
 
+### useSocketStoreRef
+
+Signature:
+
+```ts
+function useSocketStoreRef<
+  Schema extends SocketSchema = DefaultSchema,
+  Store extends SocketStoreLike<Schema> = SocketStoreLike<Schema>
+>(createStore: () => Store): Store;
+```
+
+`useSocketStoreRef(createStore)` stores the result of a side-effect-free factory
+for the component instance and returns the same store across re-renders. Use it
+only with a precreated store reference or another pure factory. Do not open a
+`WebSocket` or allocate external resources inside this factory because React can
+discard render attempts before commit.
+
+```tsx
+function ChatClient({ store }: { store: ISocketStore<ChatSchema> }) {
+  const stableStore = useSocketStoreRef(() => store);
+  const [messages, sendTalk] = useSocket(stableStore, "talk");
+
+  sendTalk("hello");
+
+  return <p>{messages.join(", ")}</p>;
+}
+```
+
 ### Lifecycle And Cleanup
 
-- All current hooks require `SocketProvider`; store-direct hooks are not part of
-  the current public API.
-- Hooks throw `react-socket-store hooks must be used inside a SocketProvider.`
-  when no provider store is available.
+- One-argument hooks require `SocketProvider`.
+- Store-direct hooks accept an explicit store and do not read provider context.
+- One-argument hooks throw
+  `react-socket-store hooks must be used inside a SocketProvider.` when no
+  provider store is available.
 - `useListen` and `useSocket` clean up by calling the unsubscribe function
   returned by `store.subscribe` when one is provided.
 - The currently published `socket-store@0.0.2` subscribe declaration returns

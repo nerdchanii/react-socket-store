@@ -3,6 +3,7 @@ import {
   useListen,
   useSend,
   useSocket,
+  useSocketStoreRef,
   type ISocketStore,
 } from "../src";
 
@@ -17,6 +18,15 @@ declare const store: ISocketStore<ChatSchema>;
 
 function SocketHookExample() {
   const [messages, sendTalk] = useSocket<ChatSchema, "talk">("talk");
+
+  sendTalk("hello");
+
+  return <p>{messages.join(", ")}</p>;
+}
+
+function DirectSocketHookExample() {
+  const directStore = useSocketStoreRef(() => store);
+  const [messages, sendTalk] = useSocket(directStore, "talk");
 
   sendTalk("hello");
 
@@ -46,6 +56,10 @@ function SendHookExample() {
 // @ts-expect-error schema-constrained topic names reject missing topics
 useListen<ChatSchema>("missing");
 
+// @ts-expect-error explicit store topics reject missing topics
+useSocket(store, "missing");
+
 void SocketHookExample;
+void DirectSocketHookExample;
 void ListenHookExample;
 void SendHookExample;
