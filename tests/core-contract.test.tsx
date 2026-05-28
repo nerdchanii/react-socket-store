@@ -22,6 +22,7 @@ type CoreSchema = {
 };
 
 class TestWebSocket {
+  readyState = 1;
   sent: string[] = [];
 
   addEventListener() {
@@ -157,7 +158,7 @@ describe("socket-store public contract fixture", () => {
     }).not.toThrow();
   });
 
-  it("surfaces unknown topic keys from the public core store", () => {
+  it("leaves known topic state unchanged for unknown core topic keys", () => {
     const { store } = createCoreFixture();
     renderHook(() => useListen<CoreSchema, "talk">("talk"), {
       wrapper: createWrapper(store),
@@ -169,7 +170,7 @@ describe("socket-store public contract fixture", () => {
           data: JSON.stringify({ key: "missing", data: "ignored" }),
         })
       );
-    }).toThrow();
+    }).not.toThrow();
 
     expect(store.getState("talk")).toEqual([]);
   });

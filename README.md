@@ -23,12 +23,9 @@ connection lifecycle callbacks.
 store-direct hooks, `useSocketStoreRef`, schema-safe hook types, and React
 subscription cleanup through `useSyncExternalStore`.
 
-The current adapter release depends on `socket-store@^0.0.2` and intentionally
-keeps local adapter contract types until a later `socket-store` release exposes
-the stronger adapter type surface on npm. When React adapter code needs a new
-core contract, release `socket-store` first, then update and release
-`react-socket-store`. The current stabilization docs do not introduce a
-breaking migration.
+The current adapter release depends on `socket-store@^0.0.3`. React-facing
+APIs remain compatible with the previous adapter release, so this is a patch
+upgrade for consumers already using the public package root exports.
 
 ## Quick Start
 
