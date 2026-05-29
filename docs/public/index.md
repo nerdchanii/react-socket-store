@@ -36,17 +36,22 @@ type ChatSchema = {
   };
 };
 
-function ChatMessages() {
+function ChatMessages({ canSend }: { canSend: boolean }) {
   const [messages, sendTalk] = useSocket<ChatSchema, "talk">("talk");
 
   return (
-    <button type="button" onClick={() => sendTalk("hello")}>
+    <button
+      type="button"
+      disabled={!canSend}
+      onClick={() => sendTalk("hello")}
+    >
       Messages: {messages.length}
     </button>
   );
 }
 
 export function ChatBoundary() {
+  const [canSend, setCanSend] = useState(false);
   const [store, setStore] = useState<ISocketStore<ChatSchema> | null>(null);
 
   useEffect(() => {
@@ -59,9 +64,13 @@ export function ChatBoundary() {
       ),
     ]) as unknown as ISocketStore<ChatSchema>;
 
+    socket.addEventListener("open", () => setCanSend(true));
+    socket.addEventListener("close", () => setCanSend(false));
+
     setStore(nextStore);
 
     return () => {
+      setCanSend(false);
       socket.close();
     };
   }, []);
@@ -72,7 +81,7 @@ export function ChatBoundary() {
 
   return (
     <SocketProvider store={store}>
-      <ChatMessages />
+      <ChatMessages canSend={canSend} />
     </SocketProvider>
   );
 }
