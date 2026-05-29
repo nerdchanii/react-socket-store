@@ -14,8 +14,8 @@ Canonical docs:
   `docs/public/api/index.md`
 - Provider, store-direct, and Next.js App Router examples:
   `docs/public/examples/index.md`
-- Agent guide for choosing Provider, store-direct, and Next.js patterns:
-  `docs/public/agents/index.md`
+- Agent-facing examples reference:
+  `docs/agents/examples.md`
 - Next.js client-boundary guidance:
   `docs/public/nextjs/index.md`
 - Package ownership, compatible socket-store version, and release order:
