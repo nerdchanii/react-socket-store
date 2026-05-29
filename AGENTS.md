@@ -7,7 +7,8 @@ React provider, hook, type, documentation, and package-boundary work.
 
 - Documentation structure: `docs/README.md`
 - Documentation wording and source checks: `docs/style-guide.md`
-- Check failures and CI expectations: `docs/project/check-failure-playbook.md`
+- Branch and release operations: `docs/project/branch-policy.md`,
+  `docs/project/release-policy.md`, and `docs/project/release-runbook.md`
 - Public package overview: `README.md`
 - Provider and context behavior: `src/components/SocketProvider.tsx` and
   `src/components/context.ts`
@@ -24,7 +25,7 @@ React provider, hook, type, documentation, and package-boundary work.
 - `docs/README.md` describes the documentation layout.
 - Agent-readable package context belongs in `docs/agents/` when the issue scope
   calls for that content.
-- Maintainer planning and failure guidance live in `docs/project/`; do not treat
+- Maintainer branch and release guidance live in `docs/project/`; do not treat
   these notes as public package guarantees.
 - Before changing public docs or examples, read `docs/README.md`,
   `docs/style-guide.md`, and any referenced source or tests.
@@ -55,9 +56,9 @@ Use existing package scripts as executable conventions:
 - `npm run pack:dry-run`
 - `npm run prepack`
 
-There is no automated example build script yet. If one is added, route failures
-through `docs/project/check-failure-playbook.md` and keep fixes tied to
-source-backed documentation or runnable examples.
+There is no automated example build script yet. If one is added, keep failures
+tied to source-backed documentation or runnable examples and route release
+decisions through `docs/project/release-runbook.md`.
 
 Do not publish npm releases, rename packages, or move this package into a
 monorepo unless explicitly requested.
