@@ -26,8 +26,6 @@ Canonical docs:
   `docs/README.md`
 - Documentation wording rules and source checks:
   `docs/style-guide.md`
-- Agent examples reference:
-  `docs/agents/examples.md`
 
 Source and example entrypoints:
 
