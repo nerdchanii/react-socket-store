@@ -32,11 +32,10 @@ adapter-owned.
 | --- | --- | --- | --- |
 | `0.0.5` | `^0.0.3` | Supported current pairing | Current documented pairing. |
 | `0.0.4` | `^0.0.2` | Older pairing | Upgrade when you want the latest public docs and compatibility guidance. |
-| Future adapter release requiring new core behavior or public core types | Matching future `socket-store` npm release | Not supported yet | Wait for a documented pairing before upgrading both packages together. |
 
 Do not import from generated `socket-store/dist/*` paths. Use package root
 exports only.
 
-The table only lists supported npm pairings and explicit unreleased boundaries.
-It does not make local `socket-store` main-branch behavior available to
-published `react-socket-store` consumers.
+The table only lists supported npm pairings. It does not make local
+`socket-store` main-branch behavior available to published
+`react-socket-store` consumers.
