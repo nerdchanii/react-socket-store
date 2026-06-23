@@ -11,13 +11,12 @@ structure the public docs site exposes.
   pages, examples, migration notes, and React integration notes.
 - `docs/agents/`: LLM-readable package context, indexes, and structured
   metadata.
-- `docs/project/`: maintainer-facing planning notes that should not be treated
-  as public package documentation. Start with
-  [`docs/project/README.md`](./project/README.md) for the internal-docs index,
-  then use `docs/project/socket-store-contract-map.md` for cross-package
-  contract work, `docs/project/store-creation-path.md` for the official store
-  creation decision, and `docs/project/release-order.md` for cross-repository
-  release order.
+- `docs/project/`: maintainer-facing operations docs that should not be treated
+  as public package documentation. Use
+  [`docs/project/README.md`](./project/README.md), then the
+  [branch policy](./project/branch-policy.md),
+  [release policy](./project/release-policy.md), and
+  [release runbook](./project/release-runbook.md).
 
 Root files keep their existing roles: `README.md` is the concise package
 overview, `example/` contains runnable app code, and `src/` is the source of
@@ -38,8 +37,8 @@ Public docs explain the supported React adapter contract: provider setup, hook
 behavior, schema-safe topic usage, subscription cleanup, React rendering
 expectations, examples, and non-goals.
 
-Project docs may track verification playbooks, release decisions, and planning
-context. Do not present project notes as package guarantees.
+Project docs may track branch policy, release policy, and release operations.
+Do not present project notes as package guarantees.
 
 Agent-facing docs should point to public docs, source files, examples, and
 metadata without duplicating complete API references.
@@ -51,15 +50,10 @@ GitHub Pages deploys the VitePress output from `docs/public/` to the
 `npm run docs:build`, uploads only `docs/public/.vitepress/dist`, and publishes
 that artifact to <https://nerdchanii.github.io/react-socket-store/>.
 
-Maintainer notes in `docs/project/` and local planning notes are outside the
-VitePress source tree and are not deployed. If Pages is not enabled for the
+Maintainer operations docs in `docs/project/` are outside the VitePress source
+tree and are not deployed. If Pages is not enabled for the
 repository yet, an owner must configure Pages to use GitHub Actions as the
 source before the workflow can publish.
-
-Use [`docs/project/README.md`](./project/README.md) as the entry point for
-internal repository notes. If an accepted process or architecture rule needs a
-single long-lived source of truth, record that need there and promote the rule
-into a dedicated SPEC instead of repeating it across closeout notes.
 
 To roll back a bad docs deployment, revert the commit that changed the public
 docs or workflow and let the `Pages` workflow deploy the reverted artifact. If

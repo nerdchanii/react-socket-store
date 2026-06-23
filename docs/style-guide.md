@@ -29,20 +29,6 @@ Before documenting a guarantee, inspect the relevant source or tests:
 - `tests/` and `test-d/` for runtime and type expectations.
 - `example/` for runnable React setup and cleanup behavior.
 
-## Referencing socket-store
-
-`react-socket-store` is the React adapter. It should reference `socket-store`
-for core WebSocket topic-store behavior instead of restating the full core API.
-
-- Link to the `socket-store` README or API contract for `SocketStore`,
-  `createMessageHandler`, protocol adapters, socket lifecycle, and core errors.
-- Keep React docs focused on provider setup, hook behavior, render timing,
-  subscription cleanup, and schema-safe hook typing.
-- Do not claim ownership of core protocol parsing, reconnect behavior,
-  persistence, or server behavior.
-- Import examples and type references from public `socket-store` package
-  entrypoints, not generated `socket-store/dist/*` paths.
-
 ## Examples
 
 Examples must be runnable or directly adaptable from runnable files. Include the
@@ -66,3 +52,26 @@ Do not describe future docs tooling, protocol adapters, or runtime integrations
 as available unless shipped source, tests, or runnable examples prove that
 support. Accepted issues may justify future or deferred wording, not availability
 claims.
+
+## Package Boundaries
+
+`react-socket-store` is the React adapter. It should reference `socket-store`
+for core WebSocket topic-store behavior instead of restating the full core API.
+
+- Link to the `socket-store` README or API contract for `SocketStore`,
+  `createMessageHandler`, protocol adapters, socket lifecycle, and core errors.
+- Keep React docs focused on provider setup, hook behavior, render timing,
+  subscription cleanup, and schema-safe hook typing.
+- Do not claim ownership of core protocol parsing, reconnect behavior,
+  persistence, or server behavior.
+- Import examples and type references from public `socket-store` package
+  entrypoints, not generated `socket-store/dist/*` paths.
+
+## Snippet Verification
+
+Public TypeScript and TSX fences in `README.md` and `docs/public/` are compiled
+by `npm run docs:snippets`.
+
+Use `no-verify` only for explicit pseudocode, signatures, or partial excerpts
+that are intentionally not standalone programs. Keep those exceptions rare and
+reviewable.
