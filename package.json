@@ -80,5 +80,10 @@
   "homepage": "https://nerdchanii.github.io/react-socket-store/",
   "dependencies": {
     "socket-store": "^0.0.3"
+  },
+  "overrides": {
+    "vitepress": {
+      "vite": "6.4.3"
+    }
   }
 }
