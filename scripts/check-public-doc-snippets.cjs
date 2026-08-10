@@ -106,7 +106,7 @@ function normalize(source) {
   }
   for (const name of ["ChatIsland", "ChatClient", "ChatRouteClient", "ChatThread"]) {
     if (has(code, name) && !declares(code, name)) {
-      declarations.push(`declare const ${name}: (props: any) => JSX.Element;`);
+      declarations.push(`declare const ${name}: (props: any) => import("react").JSX.Element;`);
     }
   }
   if (
