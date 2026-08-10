@@ -15,10 +15,15 @@ jobs:
         react-version: [18, 19]
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: npm
+      # package.json declares packageManager: npm@11.12.1. The runner ships npm
+      # 10.x, whose `npm ci` misreads the npm-11 lockfile (false "react@18.3.1
+      # missing"). Pin npm to the declared version before installing.
+      - name: Align npm to packageManager
+        run: npm install -g npm@11.12.1
       - run: npm ci
       - run: npm install --no-save react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
       - run: npm run lint
